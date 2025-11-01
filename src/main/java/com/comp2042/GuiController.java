@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -50,6 +51,23 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    @FXML
+    private Button restartButton   ;
+
+    @FXML
+    private Button exitButton;
+
+    @FXML
+    private void handleRestart(){
+        newGame(null);
+    }
+
+    @FXML
+    private void handleExit(){
+        javafx.application.Platform.exit();
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
