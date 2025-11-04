@@ -99,6 +99,10 @@ public class GuiController implements Initializable {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
+                    if(keyEvent.getCode()== KeyCode.SPACE){
+                        performQuickDrop();
+                        keyEvent.consume();
+                    }
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
@@ -111,6 +115,13 @@ public class GuiController implements Initializable {
         reflection.setFraction(0.8);
         reflection.setTopOpacity(0.9);
         reflection.setTopOffset(-12);
+    }
+
+    private void performQuickDrop(){
+        if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
+            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+            refreshBrick(newBrick);
+        }
     }
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
