@@ -24,9 +24,26 @@ final class IBrick implements Brick {
         });
     }
 
+    private IBrick(IBrick other){
+        for(int[][] shape: other.brickMatrix){
+            brickMatrix.add(MatrixOperations.deepCopy(shape));
+        }
+    }
+
     @Override
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);
     }
+
+    @Override
+    public int[][] getRotation(int index){
+        return brickMatrix.get(index);
+    }
+
+    @Override
+    public Brick clone(){
+        return new IBrick(this);
+    }
+
 
 }

@@ -13,4 +13,9 @@ public interface InputEventListener {
     void createNewGame();
 
     ViewData onQuickDropEvent(MoveEvent event);
+
+    ViewData onHoldEvent(MoveEvent event);
+
+    int[][] getHeldBrickShape();
+
 }

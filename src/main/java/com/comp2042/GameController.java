@@ -1,6 +1,6 @@
 package com.comp2042;
 
-public class GameController implements InputEventListener {
+public class GameController  implements InputEventListener {
 
     private Board board = new SimpleBoard(25, 10);
 
@@ -64,6 +64,21 @@ public class GameController implements InputEventListener {
     }
 
     @Override
+    public  ViewData onHoldEvent(MoveEvent event){
+        ViewData viewData= board.holdBrick();
+
+        int[][]heldShape= board.getHeldBrickShape();
+        viewGuiController.updateHeldBrick(heldShape);
+        return viewData;
+    }
+
+    @Override
+    public int[][] getHeldBrickShape() {
+        return board.getHeldBrickShape();
+    }
+
+
+    @Override
     public ViewData onQuickDropEvent(MoveEvent event) {
         boolean canMove= true;
 
@@ -84,4 +99,5 @@ public class GameController implements InputEventListener {
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         return board.getViewData();
     }
+
 }

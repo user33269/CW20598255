@@ -5,7 +5,6 @@ import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,6 +16,7 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -74,6 +74,9 @@ public class GuiController implements Initializable {
     private Label scoreLabel;
 
 
+    @FXML
+    private StackPane holdPane;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
@@ -103,6 +106,10 @@ public class GuiController implements Initializable {
                         performQuickDrop();
                         keyEvent.consume();
                     }
+                    if(keyEvent.getCode()== KeyCode.C){
+                        performHold();
+                        keyEvent.consume();
+                    }
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
@@ -117,12 +124,9 @@ public class GuiController implements Initializable {
         reflection.setTopOffset(-12);
     }
 
-    private void performQuickDrop(){
-        if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
-            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
-            refreshBrick(newBrick);
-        }
-    }
+
+
+
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
@@ -236,6 +240,52 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
+    }
+
+    private void performHold(){
+        if(isPause.get()== Boolean.FALSE &&isGameOver.getValue()==Boolean.FALSE){
+
+            ViewData newBrick= eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
+
+            refreshBrick(newBrick);
+
+            int[][] heldShape= eventListener.getHeldBrickShape();
+
+            updateHeldBrick(heldShape);
+
+        }
+    }
+
+    public void updateHeldBrick(int[][] shape){
+        holdPane.getChildren().clear();
+
+        if (shape ==null) return;
+
+
+        int blocksize=20;
+
+        for (int y=0; y< shape.length; y++){
+            for(int x= 0; x<shape[y].length; x++){
+                if (shape[y][x] !=0){
+                    Rectangle rectangle = new Rectangle(blocksize,blocksize);
+                    rectangle.setFill(getFillColor(shape[y][x]));
+                    rectangle.setStroke(Color.BLACK);
+                    rectangle.setStrokeWidth(1);
+
+                    rectangle.setTranslateX(x*blocksize);
+                    rectangle.setTranslateY(y*blocksize);
+
+                    holdPane.getChildren().add(rectangle);
+                }
+            }
+        }
+    }
+
+    private void performQuickDrop(){
+        if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
+            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+            refreshBrick(newBrick);
+        }
     }
 
 
