@@ -55,10 +55,11 @@
             <GameOverPanel fx:id="gameOverPanel" scaleX="0.9" scaleY="0.9" />
         </VBox>
     </Group>
-   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="24.0" prefWidth="127.0" spacing="10.0">
+   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="198.0" spacing="10.0">
       <children>
-         <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestart" text="Restart" />
+         <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestart" prefHeight="25.0" prefWidth="60.0" text="Restart" />
          <Button fx:id="exitButton" mnemonicParsing="false" onAction="#handleExit" prefHeight="29.0" prefWidth="54.0" text="Exit" />
+         <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseGame" prefHeight="25.0" prefWidth="61.0" text="Pause" />
       </children>
    </HBox>
    <StackPane fx:id="holdPane" layoutX="264.0" layoutY="69.0" prefHeight="150.0" prefWidth="200.0" style="-fx-border-color: black; -fx-background-color: lightgray;">
@@ -71,6 +72,7 @@
          </VBox>
       </children>
    </StackPane>
+   <Pane fx:id="pauseOverlay" layoutX="-8.0" layoutY="-9.0" mouseTransparent="true" opacity="0.5" prefHeight="655.0" prefWidth="481.0" style="-fx-background-color: black; visibility: false;" />
     <stylesheets>
         <URL value="@window_style.css" />
     </stylesheets>

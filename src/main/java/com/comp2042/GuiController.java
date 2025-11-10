@@ -16,6 +16,7 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -77,6 +78,12 @@ public class GuiController implements Initializable {
     @FXML
     private StackPane holdPane;
 
+    @FXML
+    private Button pauseButton;
+
+    @FXML
+    private Pane pauseOverlay;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
@@ -110,9 +117,14 @@ public class GuiController implements Initializable {
                         performHold();
                         keyEvent.consume();
                     }
+
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
+                }
+                if(keyEvent.getCode()== KeyCode.P){
+                    pauseGame(null);
+                    keyEvent.consume();
                 }
             }
         });
@@ -306,6 +318,22 @@ public class GuiController implements Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
+
+
+        if (isPause.get()){
+            timeLine.play();
+            isPause.set(false);
+            pauseButton.setText("Pause");
+            pauseOverlay.setVisible(false);
+
+        } else{
+            timeLine.pause();
+            isPause.set(true);
+            pauseButton.setText("Resume");
+            pauseOverlay.setVisible(true);
+            pauseOverlay.toFront();
+
+        }
         gamePanel.requestFocus();
     }
 }
