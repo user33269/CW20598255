@@ -1,5 +1,7 @@
 package com.comp2042;
 
+import java.awt.*;
+
 public interface Board {
 
     boolean moveBrickDown();
@@ -27,4 +29,6 @@ public interface Board {
     ViewData holdBrick();
 
     int[][] getHeldBrickShape();
+
+    Point getGhostBrickPosition();
 }

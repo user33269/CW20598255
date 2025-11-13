@@ -1,5 +1,7 @@
 package com.comp2042;
 
+import java.awt.*;
+
 public class GameController  implements InputEventListener {
 
     private Board board = new SimpleBoard(25, 10);
@@ -75,6 +77,11 @@ public class GameController  implements InputEventListener {
     @Override
     public int[][] getHeldBrickShape() {
         return board.getHeldBrickShape();
+    }
+
+    @Override
+    public Point getGhostBrickPosition(){
+        return board.getGhostBrickPosition();
     }
 
 

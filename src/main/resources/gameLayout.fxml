@@ -16,6 +16,7 @@
 <?import javafx.scene.text.Font?>
 
 <Pane prefHeight="514.0" prefWidth="467.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.GuiController">
+   <Pane fx:id="ghostPane" mouseTransparent="true" prefHeight="655.0" prefWidth="481.0" />
    <HBox alignment="CENTER_RIGHT" layoutX="250.0" layoutY="10.0" prefHeight="30.0" prefWidth="120.0">
       <children>
          <Label fx:id="scoreLabel" text="Score:0" textFill="#fff8f8">

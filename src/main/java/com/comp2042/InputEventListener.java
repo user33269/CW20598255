@@ -1,5 +1,7 @@
 package com.comp2042;
 
+import java.awt.*;
+
 public interface InputEventListener {
 
     DownData onDownEvent(MoveEvent event);
@@ -17,5 +19,7 @@ public interface InputEventListener {
     ViewData onHoldEvent(MoveEvent event);
 
     int[][] getHeldBrickShape();
+
+    Point getGhostBrickPosition();
 
 }

@@ -30,6 +30,23 @@ public class SimpleBoard implements Board {
         score = new Score();
     }
 
+    public Point getGhostBrickPosition(){
+       Point ghost= new Point(currentOffset);
+       while(true){
+           Point next= new Point(ghost.x,ghost.y+1);
+           boolean conflict= MatrixOperations.intersect(
+                   currentGameMatrix,
+                   brickRotator.getCurrentShape(),
+                   (int)next.getX(),
+                   (int)next.getY()
+           );
+           if (conflict) break;
+           ghost= next;
+       }
+       return ghost;
+    }
+
+
     @Override
     public int[][] getHeldBrickShape(){
         if (heldBrick == null) return null;
@@ -143,6 +160,8 @@ public class SimpleBoard implements Board {
         score.reset();
         createNewBrick();
     }
+
+
 
     @Override
     public ViewData holdBrick() {

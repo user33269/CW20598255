@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -86,6 +87,9 @@ public class GuiController implements Initializable {
 
     @FXML
     private Pane pauseOverlay;
+
+    @FXML
+    private Pane ghostPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -209,9 +213,30 @@ public class GuiController implements Initializable {
         return returnPaint;
     }
 
+    private void drawGhostBrick(int[][] shape, int x, int y ){
+        ghostPane.getChildren().clear();
+        int blockSize= BRICK_SIZE;
+        for (int i=0; i< shape.length; i++){
+            for(int j=0;j<shape[i].length; j++){
+                if (shape[i][j] !=0){
+                    Rectangle r = new Rectangle(blockSize, blockSize);
+                    r.setFill(Color.GRAY);
+                    r.setOpacity(0.3);
+                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize);
+                    r.setTranslateY(-80 + gamePanel.getLayoutY()+(y+i)*blockSize);
+                    ghostPane.getChildren().add(r);}
+                }
+            }
+    }
 
     private void refreshBrick(ViewData brick, boolean updateNext) {
         if (isPause.getValue() == Boolean.FALSE) {
+
+            Point ghostPos= eventListener.getGhostBrickPosition();
+            if (ghostPos != null){
+                drawGhostBrick(brick.getBrickData(), ghostPos.x, ghostPos.y);
+            }
+
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-80 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
             for (int i = 0; i < brick.getBrickData().length; i++) {
@@ -223,8 +248,6 @@ public class GuiController implements Initializable {
         }
         if (updateNext) {
             updateNextBrick(brick.getNextBrickData());}
-
-
     }
 
     public void refreshGameBackground(int[][] board) {
