@@ -25,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -77,6 +78,8 @@ public class GuiController implements Initializable {
 
     @FXML
     private StackPane holdPane;
+    @FXML
+    private StackPane nextBrickPane;
 
     @FXML
     private Button pauseButton;
@@ -94,15 +97,15 @@ public class GuiController implements Initializable {
             public void handle(KeyEvent keyEvent) {
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
@@ -171,7 +174,7 @@ public class GuiController implements Initializable {
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
-
+    
     private Paint getFillColor(int i) {
         Paint returnPaint;
         switch (i) {
@@ -207,7 +210,7 @@ public class GuiController implements Initializable {
     }
 
 
-    private void refreshBrick(ViewData brick) {
+    private void refreshBrick(ViewData brick, boolean updateNext) {
         if (isPause.getValue() == Boolean.FALSE) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-80 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
@@ -216,7 +219,12 @@ public class GuiController implements Initializable {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
                 }
             }
+
         }
+        if (updateNext) {
+            updateNextBrick(brick.getNextBrickData());}
+
+
     }
 
     public void refreshGameBackground(int[][] board) {
@@ -241,7 +249,7 @@ public class GuiController implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
-            refreshBrick(downData.getViewData());
+            refreshBrick(downData.getViewData(),true);
         }
         gamePanel.requestFocus();
     }
@@ -254,17 +262,53 @@ public class GuiController implements Initializable {
         scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
     }
 
+    private void printMatrix(int[][] matrix) {
+        if (matrix == null) {
+            System.out.println("null");
+            return;
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    public void updateNextBrick(int[][] shape){
+        nextBrickPane.getChildren().clear();
+
+        if (shape ==null) return;
+
+
+        int blocksize=20;
+
+        for (int y=0; y< shape.length; y++){
+            for(int x= 0; x<shape[y].length; x++){
+                if (shape[y][x] !=0){
+                    Rectangle rect = new Rectangle(blocksize,blocksize);
+                    rect.setFill(getFillColor(shape[y][x]));
+                    rect.setStroke(Color.BLACK);
+                    rect.setStrokeWidth(1);
+
+                    rect.setTranslateX(x*blocksize);
+                    rect.setTranslateY(y*blocksize);
+
+                    nextBrickPane.getChildren().add(rect);
+                }
+            }
+        }
+    }
     private void performHold(){
         if(isPause.get()== Boolean.FALSE &&isGameOver.getValue()==Boolean.FALSE){
 
-            ViewData newBrick= eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
+            ViewData newBrick = eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
+            if (newBrick!= null) {
 
-            refreshBrick(newBrick);
+                refreshBrick(newBrick, false);
+                int[][] heldShape = eventListener.getHeldBrickShape();
 
-            int[][] heldShape= eventListener.getHeldBrickShape();
-
-            updateHeldBrick(heldShape);
-
+                updateHeldBrick(heldShape);
+            }
         }
     }
 
@@ -293,10 +337,12 @@ public class GuiController implements Initializable {
         }
     }
 
+
+
     private void performQuickDrop(){
         if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
             ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
-            refreshBrick(newBrick);
+            refreshBrick(newBrick,true);
         }
     }
 
