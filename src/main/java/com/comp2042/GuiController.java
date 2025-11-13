@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.sun.source.tree.WhileLoopTree;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -213,17 +214,23 @@ public class GuiController implements Initializable {
         return returnPaint;
     }
 
-    private void drawGhostBrick(int[][] shape, int x, int y ){
+
+    private void drawGhostBrick(int[][] shape, int x, int y){
         ghostPane.getChildren().clear();
+
         int blockSize= BRICK_SIZE;
+
+        double hGap= brickPanel.getHgap();
+        double vGap= brickPanel.getVgap();
+
         for (int i=0; i< shape.length; i++){
             for(int j=0;j<shape[i].length; j++){
                 if (shape[i][j] !=0){
                     Rectangle r = new Rectangle(blockSize, blockSize);
                     r.setFill(Color.GRAY);
                     r.setOpacity(0.3);
-                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize);
-                    r.setTranslateY(-120 + gamePanel.getLayoutY()+(y+i)*blockSize);
+                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize + (x+j)*hGap);
+                    r.setTranslateY((y+i)*blockSize + (y+i)*vGap);
                     ghostPane.getChildren().add(r);}
                 }
             }
@@ -234,7 +241,7 @@ public class GuiController implements Initializable {
 
             Point ghostPos= eventListener.getGhostBrickPosition();
             if (ghostPos != null){
-                drawGhostBrick(brick.getBrickData(), ghostPos.x, ghostPos.y);
+                drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
             }
 
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
