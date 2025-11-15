@@ -414,18 +414,21 @@ public class GuiController implements Initializable {
 
 
         if (isPause.get()){
+            pauseOverlay.setOpacity(0);
+            pauseOverlay.setVisible(false);
             timeLine.play();
             isPause.set(false);
             pauseButton.setText("Pause");
-            pauseOverlay.setVisible(false);
-            pauseOverlay.setOpacity(0);
+
 
         } else{
+            pauseOverlay.setOpacity(0.5);
+            pauseOverlay.setVisible(true);
+            pauseOverlay.toFront();
+
             timeLine.pause();
             isPause.set(true);
             pauseButton.setText("Resume");
-            pauseOverlay.setVisible(true);
-            pauseOverlay.toFront();
 
         }
         gamePanel.requestFocus();
