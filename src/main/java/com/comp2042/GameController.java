@@ -86,11 +86,16 @@ public class GameController  implements InputEventListener {
 
     @Override
     public QuickDropData onQuickDropEvent(MoveEvent event){
+        int dropDistance=0;
 
         boolean canMove = true;
         while (canMove) {
                 canMove = board.moveBrickDown();
+                if(canMove) dropDistance++;
         }
+        board.mergeBrickToBackground();
+
+        board.getScore().add(dropDistance*2);
         board.mergeBrickToBackground();
 
         ClearRow clearRow = board.clearRows();
