@@ -411,6 +411,7 @@ public class GuiController implements Initializable {
             isPause.set(false);
             pauseButton.setText("Pause");
             pauseOverlay.setVisible(false);
+            pauseOverlay.setOpacity(0);
 
         } else{
             timeLine.pause();
