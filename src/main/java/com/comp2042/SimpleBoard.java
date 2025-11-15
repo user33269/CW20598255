@@ -115,7 +115,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         this.currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(4, 8);
 
         canHold=true;
         return MatrixOperations.intersect(
