@@ -26,7 +26,7 @@
          </Label>
       </children>
    </HBox>
-    <GridPane fx:id="brickPanel" hgap="1" prefHeight="514.0" prefWidth="348.0" vgap="1">
+    <GridPane fx:id="brickPanel" hgap="1" prefHeight="514.0" prefWidth="251.0" vgap="1">
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />
@@ -84,6 +84,11 @@
             <GameOverPanel fx:id="gameOverPanel" scaleX="0.9" scaleY="0.9" />
         </VBox>
     </Group>
+   <HBox layoutX="295.0" layoutY="40.0" prefHeight="30.0" prefWidth="113.0">
+      <children>
+         <Label fx:id="highestScoreLabel" prefHeight="17.0" prefWidth="105.0" text="HighestScore: 0" textFill="WHITE" />
+      </children>
+   </HBox>
     <stylesheets>
         <URL value="@window_style.css" />
     </stylesheets>

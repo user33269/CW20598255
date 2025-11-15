@@ -75,7 +75,8 @@ public class GuiController implements Initializable {
     @FXML
     private Label scoreLabel;
 
-
+    @FXML
+    private Label highestScoreLabel;
     @FXML
     private StackPane holdPane;
     @FXML
@@ -292,6 +293,12 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
+    }
+
+    public void updateHighestScore(int hs){
+        if (highestScoreLabel !=null){
+            highestScoreLabel.setText("Highest Score:"+ hs);
+        }
     }
 
     private void printMatrix(int[][] matrix) {
