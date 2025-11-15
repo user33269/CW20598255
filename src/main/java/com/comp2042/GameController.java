@@ -66,45 +66,48 @@ public class GameController  implements InputEventListener {
     }
 
     @Override
-    public  ViewData onHoldEvent(MoveEvent event){
-        ViewData viewData= board.holdBrick();
+    public ViewData onHoldEvent(MoveEvent event) {
+        ViewData viewData = board.holdBrick();
 
-        int[][]heldShape= board.getHeldBrickShape();
+        int[][] heldShape = board.getHeldBrickShape();
         viewGuiController.updateHeldBrick(heldShape);
         return viewData;
     }
 
     @Override
     public int[][] getHeldBrickShape() {
-        return board.getHeldBrickShape();
-    }
+        return board.getHeldBrickShape();}
 
     @Override
-    public Point getGhostBrickPosition(){
-        return board.getGhostBrickPosition();
+    public Point getGhostBrickPosition () {
+            return board.getGhostBrickPosition();
     }
 
 
     @Override
-    public ViewData onQuickDropEvent(MoveEvent event) {
-        boolean canMove= true;
+    public QuickDropData onQuickDropEvent(MoveEvent event){
 
-        while (canMove){
-            canMove= board.moveBrickDown();
+        boolean canMove = true;
+        while (canMove) {
+                canMove = board.moveBrickDown();
         }
-        board.mergeBrickToBackground();;
-        ClearRow clearRow=board.clearRows();
+        board.mergeBrickToBackground();
 
-        if (clearRow.getLinesRemoved()>0){
+        ClearRow clearRow = board.clearRows();
+
+        if (clearRow.getLinesRemoved() > 0) {
             board.getScore().add(clearRow.getScoreBonus());
+
         }
 
-        if (board.createNewBrick()){
+        if (board.createNewBrick()) {
             viewGuiController.gameOver();
         }
 
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
-        return board.getViewData();
+        return new QuickDropData(clearRow, board.getViewData());
+        }
+
     }
 
-}
+

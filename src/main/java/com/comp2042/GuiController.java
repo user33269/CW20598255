@@ -1,6 +1,5 @@
 package com.comp2042;
 
-import com.sun.source.tree.WhileLoopTree;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -27,7 +26,6 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -274,12 +272,16 @@ public class GuiController implements Initializable {
     private void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
+
+
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
+
+
             }
-            refreshBrick(downData.getViewData(),true);
+            refreshBrick(downData.getViewData(),false);
         }
         gamePanel.requestFocus();
     }
@@ -371,8 +373,16 @@ public class GuiController implements Initializable {
 
     private void performQuickDrop(){
         if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
-            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
-            refreshBrick(newBrick,true);
+            QuickDropData quickDrop= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+
+            refreshBrick(quickDrop.getViewData(),true);
+
+            if (quickDrop.getClearRow() != null && quickDrop.getClearRow().getLinesRemoved() > 0) {
+                NotificationPanel notificationPanel = new NotificationPanel("+" + quickDrop.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(notificationPanel);
+                notificationPanel.showScore(groupNotification.getChildren());}
+
+            gamePanel.requestFocus();;
         }
     }
 

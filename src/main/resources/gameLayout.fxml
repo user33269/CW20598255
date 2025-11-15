@@ -50,12 +50,6 @@
          </GridPane>
         </center>
     </BorderPane>
-
-    <Group fx:id="groupNotification" layoutX="0" layoutY="203">
-        <VBox alignment="CENTER">
-            <GameOverPanel fx:id="gameOverPanel" scaleX="0.9" scaleY="0.9" />
-        </VBox>
-    </Group>
    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="198.0" spacing="10.0">
       <children>
          <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestart" prefHeight="25.0" prefWidth="60.0" text="Restart" />
@@ -84,6 +78,12 @@
          </VBox>
       </children>
    </StackPane>
+
+    <Group fx:id="groupNotification" layoutX="0" layoutY="203">
+        <VBox alignment="CENTER">
+            <GameOverPanel fx:id="gameOverPanel" scaleX="0.9" scaleY="0.9" />
+        </VBox>
+    </Group>
     <stylesheets>
         <URL value="@window_style.css" />
     </stylesheets>
