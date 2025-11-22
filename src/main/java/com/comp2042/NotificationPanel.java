@@ -18,7 +18,7 @@ public class NotificationPanel extends BorderPane {
 
     public NotificationPanel(String text) {
         setMinHeight(200);
-        setMinWidth(220);
+        setMinWidth(850);
         final Label score = new Label(text);
         score.getStyleClass().add("bonusStyle");
         final Effect glow = new Glow(0.6);

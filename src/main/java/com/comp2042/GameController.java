@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class GameController  implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private Board board = new SimpleBoard(23, 10);
 
     private int highestScore=0;
     private final String HIGHEST_SCORE_FILE= "highestScore.txt";
