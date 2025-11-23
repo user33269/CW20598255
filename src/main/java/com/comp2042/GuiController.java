@@ -144,9 +144,6 @@ public class GuiController implements Initializable {
     }
 
 
-
-
-
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
