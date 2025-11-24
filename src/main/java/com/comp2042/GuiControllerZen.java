@@ -28,7 +28,7 @@ import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GuiController implements Initializable {
+public class GuiControllerZen implements Initializable {
 
     private static final int BRICK_SIZE = 20;
 
