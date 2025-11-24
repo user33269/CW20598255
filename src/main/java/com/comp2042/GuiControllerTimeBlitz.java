@@ -96,6 +96,12 @@ public class GuiControllerTimeBlitz implements Initializable {
     @FXML
     private Pane ghostPane;
 
+    @FXML
+    private void returnHome(ActionEvent event){
+        gameControllerTimeBlitz.stopTimer();
+
+        HomeController homeController= SceneLoader.load("/home.fxml");
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
