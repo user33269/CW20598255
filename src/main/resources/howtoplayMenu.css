@@ -1,0 +1,9 @@
+.root {
+    -fx-background-image: url("HowtoplayMenu.png");
+    -fx-background-size: 450px 350px;
+}
+
+.button{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
