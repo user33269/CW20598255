@@ -340,7 +340,12 @@ public class GuiControllerTimeBlitz implements Initializable {
     public void newGame() {
         timeLine.stop();
         gameOverPanel.setVisible(false);
+
         holdPane.getChildren().clear();
+        nextBrickPane.getChildren().clear();
+        pauseOverlay.setVisible(false);
+        pauseOverlay.setOpacity(0);
+
         eventListener.createNewGame();
         gamePanel.requestFocus();
         timeLine.play();
