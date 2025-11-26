@@ -27,7 +27,7 @@ public class HomeController {
 
     @FXML
     private void timeMode(ActionEvent event){
-        GuiControllerTimeBlitz guiControllerTimeBlitz= SceneLoader.load("/gameLayoutTimeBlitz.fxml");
+        GuiControllerTimeBlitz guiControllerTimeBlitz = SceneLoader.load("/gameLayoutTimeBlitz.fxml");
         GameControllerTimeBlitz game= new GameControllerTimeBlitz(guiControllerTimeBlitz);
         guiControllerTimeBlitz.setGameControllerTimeBlitz(game);
     }

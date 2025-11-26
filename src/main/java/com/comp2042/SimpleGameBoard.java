@@ -6,7 +6,7 @@ import com.comp2042.logic.bricks.RandomBrickGenerator;
 
 import java.awt.*;
 
-public class SimpleBoard implements Board {
+public class SimpleGameBoard implements GameBoard {
 
     private final int width;
     private final int height;
@@ -20,7 +20,7 @@ public class SimpleBoard implements Board {
     private Brick currentBrick;
     private int heldRotation;
 
-    public SimpleBoard(int width, int height) {
+    public SimpleGameBoard(int width, int height) {
         this.width = width;
         this.height = height;
         currentGameMatrix = new int[width][height];
@@ -192,8 +192,6 @@ public class SimpleBoard implements Board {
         score.reset();
         createNewBrick();
     }
-
-
 
     @Override
     public ViewData holdBrick() {

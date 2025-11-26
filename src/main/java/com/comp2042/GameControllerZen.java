@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class GameControllerZen implements InputEventListener {
 
-    private Board board = new SimpleBoard(23, 10);
+    private GameBoard gameBoard = new SimpleGameBoard(23, 10);
 
     private int highestScoreZen=0;
     private final String HIGHEST_SCORE_FILE_ZEN = "highestScoreZen.txt";
@@ -16,10 +16,10 @@ public class GameControllerZen implements InputEventListener {
     public GameControllerZen(GuiControllerZen c) {
         viewGuiController = c;
         loadHighestScoreZen();
-        board.createNewBrick();
+        gameBoard.createNewBrick();
         viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
+        viewGuiController.initGameView(gameBoard.getBoardMatrix(), gameBoard.getViewData());
+        viewGuiController.bindScore(gameBoard.getScore().scoreProperty());
 
         viewGuiController.updateHighestScore(highestScoreZen);
     }
@@ -51,7 +51,7 @@ public class GameControllerZen implements InputEventListener {
         }
     }
     private void checkHighestScore(){
-        int current= board.getScore().scoreProperty().get();
+        int current= gameBoard.getScore().scoreProperty().get();
         if(current>highestScoreZen){
             highestScoreZen= current;
             saveHighestScore();
@@ -62,83 +62,83 @@ public class GameControllerZen implements InputEventListener {
 
     @Override
     public DownData onDownEvent(MoveEvent event) {
-        boolean canMove = board.moveBrickDown();
+        boolean canMove = gameBoard.moveBrickDown();
         ClearRow clearRow = null;
         if (!canMove) {
             
-            if (board.getLockDelayStart()<0){
-                board.setLockDelayStart(System.currentTimeMillis());
-                return new DownData(null,board.getViewData());
+            if (gameBoard.getLockDelayStart()<0){
+                gameBoard.setLockDelayStart(System.currentTimeMillis());
+                return new DownData(null, gameBoard.getViewData());
             }
 
-            if (System.currentTimeMillis()- board.getLockDelayStart()<board.getMaxLockDelay()){
-                return new DownData(null,board.getViewData());
+            if (System.currentTimeMillis()- gameBoard.getLockDelayStart()< gameBoard.getMaxLockDelay()){
+                return new DownData(null, gameBoard.getViewData());
             }
 
-            board.setLockDelayStart(-1);
-            board.mergeBrickToBackground();
-            clearRow = board.clearRows();
+            gameBoard.setLockDelayStart(-1);
+            gameBoard.mergeBrickToBackground();
+            clearRow = gameBoard.clearRows();
             if (clearRow.getLinesRemoved() > 0) {
-                board.getScore().add(clearRow.getScoreBonus());
+                gameBoard.getScore().add(clearRow.getScoreBonus());
             }
-            if (board.createNewBrick()) {
+            if (gameBoard.createNewBrick()) {
                 viewGuiController.gameOver();
             }
 
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
 
         } else {
 
-            board.setLockDelayStart(-1);
+            gameBoard.setLockDelayStart(-1);
             if (event.getEventSource() == EventSource.USER) {
-                board.getScore().add(1);
+                gameBoard.getScore().add(1);
                 checkHighestScore();
             }
         }
-        return new DownData(clearRow, board.getViewData());
+        return new DownData(clearRow, gameBoard.getViewData());
     }
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
-        board.moveBrickLeft();
-        return board.getViewData();
+        gameBoard.moveBrickLeft();
+        return gameBoard.getViewData();
     }
 
     @Override
     public ViewData onRightEvent(MoveEvent event) {
-        board.moveBrickRight();
-        return board.getViewData();
+        gameBoard.moveBrickRight();
+        return gameBoard.getViewData();
     }
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
-        return board.getViewData();
+        gameBoard.rotateLeftBrick();
+        return gameBoard.getViewData();
     }
 
 
     @Override
     public void createNewGame() {
-        board.newGame();
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        gameBoard.newGame();
+        viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
     }
 
     @Override
     public ViewData onHoldEvent(MoveEvent event) {
-        ViewData viewData = board.holdBrick();
+        ViewData viewData = gameBoard.holdBrick();
 
-        int[][] heldShape = board.getHeldBrickShape();
+        int[][] heldShape = gameBoard.getHeldBrickShape();
         viewGuiController.updateHeldBrick(heldShape);
         return viewData;
     }
 
     @Override
     public int[][] getHeldBrickShape() {
-        return board.getHeldBrickShape();}
+        return gameBoard.getHeldBrickShape();}
 
     @Override
     public Point getGhostBrickPosition () {
-            return board.getGhostBrickPosition();
+            return gameBoard.getGhostBrickPosition();
     }
 
 
@@ -148,28 +148,28 @@ public class GameControllerZen implements InputEventListener {
 
         boolean canMove = true;
         while (canMove) {
-                canMove = board.moveBrickDown();
+                canMove = gameBoard.moveBrickDown();
                 if(canMove) dropDistance++;
         }
-        board.mergeBrickToBackground();
+        gameBoard.mergeBrickToBackground();
 
-        board.getScore().add(dropDistance*2);
+        gameBoard.getScore().add(dropDistance*2);
         checkHighestScore();
-        board.mergeBrickToBackground();
+        gameBoard.mergeBrickToBackground();
 
-        ClearRow clearRow = board.clearRows();
+        ClearRow clearRow = gameBoard.clearRows();
 
         if (clearRow.getLinesRemoved() > 0) {
-            board.getScore().add(clearRow.getScoreBonus());
+            gameBoard.getScore().add(clearRow.getScoreBonus());
             checkHighestScore();
         }
 
-        if (board.createNewBrick()) {
+        if (gameBoard.createNewBrick()) {
             viewGuiController.gameOver();
         }
 
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
-        return new QuickDropData(clearRow, board.getViewData());
+        viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
+        return new QuickDropData(clearRow, gameBoard.getViewData());
         }
 
     }

@@ -91,7 +91,7 @@ public class GuiControllerTimeBlitz implements Initializable {
     @FXML
     private void returnHome(){
         gameControllerTimeBlitz.stopTimer();
-        SceneLoader.load("/home.fxml");
+        SceneLoader.load("/homeLayout.fxml");
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="460.0" prefWidth="736.0" stylesheets="@timeblitz.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.GuiControllerTimeBlitz">
+<Pane prefHeight="460.0" prefWidth="736.0" stylesheets="@timeblitzMode.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.GuiControllerTimeBlitz">
     <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="151.0" prefHeight="30.0" prefWidth="120.0"
           styleClass="rectangleBorder">
         <Label fx:id="scoreLabel" styleClass="scoreClass" text="Score:0"/>

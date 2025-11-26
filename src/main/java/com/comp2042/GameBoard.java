@@ -2,7 +2,7 @@ package com.comp2042;
 
 import java.awt.*;
 
-public interface Board {
+public interface GameBoard {
 
     boolean moveBrickDown();
 

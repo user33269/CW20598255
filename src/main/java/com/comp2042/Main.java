@@ -13,7 +13,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         SceneLoader.setStage(primaryStage);
-        Parent root = FXMLLoader.load(getClass().getResource("/home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/homeLayout.fxml"));
 
         primaryStage.setTitle("TetrisJFX");
         Scene scene = new Scene(root);

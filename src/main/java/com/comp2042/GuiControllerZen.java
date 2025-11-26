@@ -86,8 +86,9 @@ public class GuiControllerZen implements Initializable {
 
     @FXML
     private void returnHome(){
-        SceneLoader.load("/home.fxml");
+        SceneLoader.load("/homeLayout.fxml");
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
