@@ -171,7 +171,7 @@ public class GuiControllerTimeBlitz implements Initializable {
 
 
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(700),
+                Duration.millis(600),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
