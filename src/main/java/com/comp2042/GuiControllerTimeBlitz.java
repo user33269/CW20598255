@@ -5,15 +5,12 @@ import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -30,18 +27,9 @@ import java.util.ResourceBundle;
 public class GuiControllerTimeBlitz implements Initializable {
 
     private static final int BRICK_SIZE = 20;
-
-    @FXML
-    private GridPane gamePanel;
-
-    @FXML
-    private Group groupNotification;
-
-    @FXML
-    private GridPane brickPanel;
-
-    @FXML
-    private GameOverPanel gameOverPanel;
+    private static final int BRICK_OFFSETX = 323;
+    private static final int BRICK_OFFSETY = -120;
+    private static final int GHOST_OFFSETY = -58;
 
     private Rectangle[][] displayMatrix;
 
@@ -56,6 +44,15 @@ public class GuiControllerTimeBlitz implements Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     @FXML
+    private GridPane gamePanel;
+    @FXML
+    private Group groupNotification;
+    @FXML
+    private GridPane brickPanel;
+    @FXML
+    private GameOverPanel gameOverPanel;
+
+    @FXML
     private void handleRestart(){
         newGame();
         gameControllerTimeBlitz.restartTimer();
@@ -68,23 +65,18 @@ public class GuiControllerTimeBlitz implements Initializable {
 
     @FXML
     private Label scoreLabel;
-
     @FXML
     private Label timeLabel;
-
     @FXML
     private Label highestScoreLabel;
     @FXML
     private StackPane holdPane;
     @FXML
     private StackPane nextBrickPane;
-
     @FXML
     private Button pauseButton;
-
     @FXML
     private Pane pauseOverlay;
-
     @FXML
     private Pane ghostPane;
 
@@ -93,49 +85,49 @@ public class GuiControllerTimeBlitz implements Initializable {
         gameControllerTimeBlitz.stopTimer();
         SceneLoader.load("/homeLayout.fxml");
     }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
-                    if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
+        gamePanel.setOnKeyPressed(keyEvent ->{
+
+                if (isPause.getValue() || isGameOver.getValue()) return;
+
+                switch(keyEvent.getCode()) {
+                         case LEFT->{
+                            refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
+                            keyEvent.consume();
+                        }
+                        case RIGHT->{
+                            refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
+                            keyEvent.consume();
+                        }
+                        case UP ->{
+                            refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
+                            keyEvent.consume();
+                        }
+                        case DOWN->{
+                            moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                            keyEvent.consume();
+                        }
+
+                        case SPACE->{
+                            performQuickDrop();
+                            keyEvent.consume();
+                        }
+                        case C->{
+                            performHold();
+                            keyEvent.consume();
+                        }
+                        case N-> newGame();
+                        case P ->{
+                        pauseGame();
                         keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
-                        keyEvent.consume();
-                    }
-                    if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
-                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
-                        keyEvent.consume();
-                    }
-                    if(keyEvent.getCode()== KeyCode.SPACE){
-                        performQuickDrop();
-                        keyEvent.consume();
-                    }
-                    if(keyEvent.getCode()== KeyCode.C){
-                        performHold();
-                        keyEvent.consume();
+                        }
                     }
 
-                }
-                if (keyEvent.getCode() == KeyCode.N) {
-                    newGame();
-                }
-                if(keyEvent.getCode()== KeyCode.P){
-                    pauseGame();
-                    keyEvent.consume();
-                }
-            }
         });
         gameOverPanel.setVisible(false);
 
@@ -166,8 +158,8 @@ public class GuiControllerTimeBlitz implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
-        brickPanel.setLayoutX(323+gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-        brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+        brickPanel.setLayoutX(BRICK_OFFSETX+gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
+        brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
 
         timeLine = new Timeline(new KeyFrame(
@@ -179,39 +171,19 @@ public class GuiControllerTimeBlitz implements Initializable {
     }
     
     private Paint getFillColor(int i) {
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.TRANSPARENT;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.BLUEVIOLET;
-                break;
-            case 3:
-                returnPaint = Color.DARKGREEN;
-                break;
-            case 4:
-                returnPaint = Color.YELLOW;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.BEIGE;
-                break;
-            case 7:
-                returnPaint = Color.BURLYWOOD;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
-        }
-        return returnPaint;
-    }
 
+        return switch (i) {
+            case 0 ->Color.TRANSPARENT;
+            case 1 ->Color.AQUA;
+            case 2 ->Color.BLUEVIOLET;
+            case 3 ->Color.DARKGREEN;
+            case 4 ->Color.YELLOW;
+            case 5->Color.RED;
+            case 6-> Color.BEIGE;
+            case 7->Color.BURLYWOOD;
+            default -> Color.WHITE;
+        };
+    }
 
     private void drawGhostBrick(int[][] shape, int x, int y){
         ghostPane.getChildren().clear();
@@ -228,7 +200,7 @@ public class GuiControllerTimeBlitz implements Initializable {
                     r.setFill(Color.GRAY);
                     r.setOpacity(0.3);
                     r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize + (x+j)*hGap);
-                    r.setTranslateY(-58+gamePanel.getLayoutY()+(y+i)*blockSize + (y+i)*vGap);
+                    r.setTranslateY(GHOST_OFFSETY +gamePanel.getLayoutY()+(y+i)*blockSize + (y+i)*vGap);
                     ghostPane.getChildren().add(r);}
                 }
             }
@@ -243,8 +215,8 @@ public class GuiControllerTimeBlitz implements Initializable {
                 drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
             }
 
-            brickPanel.setLayoutX(323+brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            brickPanel.setLayoutX(BRICK_OFFSETX+brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
+            brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
@@ -271,20 +243,21 @@ public class GuiControllerTimeBlitz implements Initializable {
     }
 
     private void moveDown(MoveEvent event) {
-        if (isPause.getValue() == Boolean.FALSE) {
-            DownData downData = eventListener.onDownEvent(event);
+        if (isPause.getValue()) return;
 
-
-            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());
-
-
-            }
-            refreshBrick(downData.getViewData(),false);
-        }
+        DownData downData = eventListener.onDownEvent(event);
+        clearedRowsNotif(downData.getClearRow());
+        refreshBrick(downData.getViewData(),false);
         gamePanel.requestFocus();
+    }
+
+    private void clearedRowsNotif(ClearRow clearRow){
+        if (clearRow!= null && clearRow.getLinesRemoved() > 0) {
+            NotificationPanel notificationPanel = new NotificationPanel("+" + clearRow.getScoreBonus());
+            groupNotification.getChildren().add(notificationPanel);
+            notificationPanel.showScore(groupNotification.getChildren());
+
+        }
     }
 
     public void setEventListener(InputEventListener eventListener) {
@@ -305,33 +278,28 @@ public class GuiControllerTimeBlitz implements Initializable {
         timeLabel.setText((timeLeft+" s"));
     }
 
-
-    public void updateNextBrick(int[][] shape){
-        nextBrickPane.getChildren().clear();
-
+    private void drawRectanglesToPane(int[][] shape, Pane pane){
         if (shape ==null) return;
-
-
-        int blocksize=20;
-
+        pane.getChildren().clear();
         for (int y=0; y< shape.length; y++){
             for(int x= 0; x<shape[y].length; x++){
                 if (shape[y][x] !=0){
-                    Rectangle rect = new Rectangle(blocksize,blocksize);
+                    Rectangle rect = new Rectangle(BRICK_SIZE,BRICK_SIZE);
                     rect.setFill(getFillColor(shape[y][x]));
                     rect.setStroke(Color.BLACK);
                     rect.setStrokeWidth(1);
 
-                    rect.setTranslateX(x*blocksize);
-                    rect.setTranslateY(y*blocksize);
+                    rect.setTranslateX(x* BRICK_SIZE);
+                    rect.setTranslateY(y*BRICK_SIZE);
 
-                    nextBrickPane.getChildren().add(rect);
+                    pane.getChildren().add(rect);
                 }
             }
         }
     }
+
     private void performHold(){
-        if(isPause.get()== Boolean.FALSE &&isGameOver.getValue()==Boolean.FALSE){
+        if(!isPause.get() &&isGameOver.getValue()==Boolean.FALSE){
 
             ViewData newBrick = eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
             if (newBrick!= null) {
@@ -345,30 +313,11 @@ public class GuiControllerTimeBlitz implements Initializable {
     }
 
     public void updateHeldBrick(int[][] shape){
-        holdPane.getChildren().clear();
-
-        if (shape ==null) return;
-
-
-        int blocksize=20;
-
-        for (int y=0; y< shape.length; y++){
-            for(int x= 0; x<shape[y].length; x++){
-                if (shape[y][x] !=0){
-                    Rectangle rectangle = new Rectangle(blocksize,blocksize);
-                    rectangle.setFill(getFillColor(shape[y][x]));
-                    rectangle.setStroke(Color.BLACK);
-                    rectangle.setStrokeWidth(1);
-
-                    rectangle.setTranslateX(x*blocksize);
-                    rectangle.setTranslateY(y*blocksize);
-
-                    holdPane.getChildren().add(rectangle);
-                }
-            }
-        }
+        drawRectanglesToPane(shape,holdPane);
     }
-
+    public void updateNextBrick(int[][] shape){
+        drawRectanglesToPane(shape,nextBrickPane);
+    }
 
 
     private void performQuickDrop(){
