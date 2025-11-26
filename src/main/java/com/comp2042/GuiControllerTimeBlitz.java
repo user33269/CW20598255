@@ -243,7 +243,7 @@ public class GuiControllerTimeBlitz implements Initializable {
         }
     }
     private void moveDown(MoveEvent event) {
-        if (isPause.getValue()) return;
+        if (isPause.getValue()|| isGameOver.getValue()) return;
 
         DownData downData = eventListener.onDownEvent(event);
         clearedRowsNotif(downData.getClearRow());
@@ -329,6 +329,8 @@ public class GuiControllerTimeBlitz implements Initializable {
     }
 
     public void gameOver() {
+
+        isGameOver.setValue(true);
         timeLabel.setText("Time's UP!");
         timeLine.stop();
         gameControllerTimeBlitz.stopTimer();

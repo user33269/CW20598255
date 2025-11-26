@@ -97,6 +97,7 @@ public class GameControllerTimeBlitz implements InputEventListener {
         viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
 
         if (data.isGameOver()){
+            timeLine.stop();
             viewGuiController.gameOver();
         }
         return data;
@@ -150,6 +151,7 @@ public class GameControllerTimeBlitz implements InputEventListener {
         QuickDropData data= gameBoard.quickDrop();
 
         if(data.isGameOver()){
+            timeLine.stop();
             viewGuiController.gameOver();
         }
 

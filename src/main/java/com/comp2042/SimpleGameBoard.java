@@ -134,8 +134,10 @@ public class SimpleGameBoard implements GameBoard {
         }
     }
     private final int GAME_OVER_ROW=3;
+
     @Override
     public boolean createNewBrick() {
+
         this.currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
         currentOffset = new Point(4, 3);
