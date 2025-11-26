@@ -133,15 +133,19 @@ public class SimpleGameBoard implements GameBoard {
             return true;
         }
     }
-
+    private final int GAME_OVER_ROW=3;
     @Override
     public boolean createNewBrick() {
         this.currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 8);
+        currentOffset = new Point(4, 3);
 
         canHold=true;
-        return checkforCollision(currentOffset,null);
+        boolean collision= checkforCollision(currentOffset,null);
+        if(collision && currentOffset.getY()<=GAME_OVER_ROW){
+            return true;
+        }
+        return false;
     }
 
     @Override
