@@ -6,6 +6,8 @@ public interface GameBoard {
 
     boolean moveBrickDown();
 
+    DownData moveDown();
+
     boolean moveBrickLeft();
 
     boolean moveBrickRight();
@@ -37,4 +39,6 @@ public interface GameBoard {
     void setLockDelayStart(long value);
 
     long getMaxLockDelay();
+
+    QuickDropData quickDrop();
 }

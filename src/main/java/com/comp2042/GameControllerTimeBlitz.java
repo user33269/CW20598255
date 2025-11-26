@@ -137,11 +137,11 @@ public class GameControllerTimeBlitz implements InputEventListener {
             
             if (gameBoard.getLockDelayStart()<0){
                 gameBoard.setLockDelayStart(System.currentTimeMillis());
-                return new DownData(null, gameBoard.getViewData());
+                return new DownData(null, gameBoard.getViewData(), false);
             }
 
             if (System.currentTimeMillis()- gameBoard.getLockDelayStart()< gameBoard.getMaxLockDelay()){
-                return new DownData(null, gameBoard.getViewData());
+                return new DownData(null, gameBoard.getViewData(), false);
             }
 
             gameBoard.setLockDelayStart(-1);
@@ -164,7 +164,7 @@ public class GameControllerTimeBlitz implements InputEventListener {
                 checkHighestScoreTime();
             }
         }
-        return new DownData(clearRow, gameBoard.getViewData());
+        return new DownData(clearRow, gameBoard.getViewData(), false);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class GameControllerTimeBlitz implements InputEventListener {
         }
 
         viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
-        return new QuickDropData(clearRow, gameBoard.getViewData());
+        return new QuickDropData(clearRow, gameBoard.getViewData(),false    );
         }
 
     }

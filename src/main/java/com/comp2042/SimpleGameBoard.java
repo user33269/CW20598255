@@ -83,6 +83,50 @@ public class SimpleGameBoard implements GameBoard {
         }
     }
 
+    public DownData moveDown(){
+
+        boolean canMove = moveBrickDown();
+        ClearRow clearRow;
+
+        if (!canMove) {
+
+            mergeBrickToBackground();
+
+            clearRow = clearRows();
+            if (clearRow.getLinesRemoved() > 0) {
+               getScore().add(clearRow.getScoreBonus());
+            }
+
+            boolean gameOver= createNewBrick();
+
+            return new DownData(clearRow,getViewData(), gameOver);
+        } else {
+            return new DownData(null, getViewData(), false);
+        }
+
+    }
+
+    public QuickDropData quickDrop(){
+        int dropDistance=0;
+
+        while (moveBrickDown()) {
+            dropDistance++;
+        }
+        mergeBrickToBackground();
+
+        score.add(dropDistance*2);
+
+        ClearRow clearRow= clearRows();
+        if(clearRow.getLinesRemoved()>0){
+            score.add(clearRow.getScoreBonus());
+        }
+
+        boolean gameOver= createNewBrick();
+
+        return  new QuickDropData(clearRow,getViewData(),gameOver);
+    }
+
+
 
     @Override
     public boolean moveBrickLeft() {
@@ -222,4 +266,6 @@ public class SimpleGameBoard implements GameBoard {
         canHold= false;
         return getViewData();
     }
+
+
 }
