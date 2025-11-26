@@ -54,7 +54,7 @@ public class GameControllerZen implements InputEventListener {
         int current= board.getScore().scoreProperty().get();
         if(current>highestScoreZen){
             highestScoreZen= current;
-            saveHighestScore();;
+            saveHighestScore();
             viewGuiController.updateHighestScore(highestScoreZen);
         }
     }

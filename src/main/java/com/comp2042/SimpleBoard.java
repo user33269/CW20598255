@@ -18,7 +18,6 @@ public class SimpleBoard implements Board {
     private Brick heldBrick= null ;
     private boolean canHold=true;
     private Brick currentBrick;
-    private Brick nextBrick;
     private int heldRotation;
 
     public SimpleBoard(int width, int height) {

@@ -5,7 +5,6 @@ import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,14 +56,8 @@ public class GuiControllerZen implements Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     @FXML
-    private Button restartButton   ;
-
-    @FXML
-    private Button exitButton;
-
-    @FXML
     private void handleRestart(){
-        newGame(null);
+        newGame();
     }
 
     @FXML
@@ -92,9 +85,8 @@ public class GuiControllerZen implements Initializable {
     private Pane ghostPane;
 
     @FXML
-    private void returnHome(ActionEvent event){
-
-        HomeController homeController= SceneLoader.load("/home.fxml");
+    private void returnHome(){
+        SceneLoader.load("/home.fxml");
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -132,10 +124,10 @@ public class GuiControllerZen implements Initializable {
 
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
-                    newGame(null);
+                    newGame();
                 }
                 if(keyEvent.getCode()== KeyCode.P){
-                    pauseGame(null);
+                    pauseGame();
                     keyEvent.consume();
                 }
             }
@@ -304,18 +296,6 @@ public class GuiControllerZen implements Initializable {
         }
     }
 
-    private void printMatrix(int[][] matrix) {
-        if (matrix == null) {
-            System.out.println("null");
-            return;
-        }
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
     public void updateNextBrick(int[][] shape){
         nextBrickPane.getChildren().clear();
 
@@ -392,7 +372,7 @@ public class GuiControllerZen implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());}
 
-            gamePanel.requestFocus();;
+            gamePanel.requestFocus();
         }
     }
 
@@ -403,7 +383,7 @@ public class GuiControllerZen implements Initializable {
         isGameOver.setValue(Boolean.TRUE);
     }
 
-    public void newGame(ActionEvent actionEvent) {
+    public void newGame() {
         timeLine.stop();
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
@@ -413,7 +393,7 @@ public class GuiControllerZen implements Initializable {
         isGameOver.setValue(Boolean.FALSE);
     }
 
-    public void pauseGame(ActionEvent actionEvent) {
+    public void pauseGame() {
 
 
         if (isPause.get()){

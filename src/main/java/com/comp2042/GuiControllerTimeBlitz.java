@@ -5,7 +5,6 @@ import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +23,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -58,14 +56,8 @@ public class GuiControllerTimeBlitz implements Initializable {
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
     @FXML
-    private Button restartButton   ;
-
-    @FXML
-    private Button exitButton;
-
-    @FXML
     private void handleRestart(){
-        newGame(null);
+        newGame();
         gameControllerTimeBlitz.restartTimer();
     }
 
@@ -97,10 +89,9 @@ public class GuiControllerTimeBlitz implements Initializable {
     private Pane ghostPane;
 
     @FXML
-    private void returnHome(ActionEvent event){
+    private void returnHome(){
         gameControllerTimeBlitz.stopTimer();
-
-        HomeController homeController= SceneLoader.load("/home.fxml");
+        SceneLoader.load("/home.fxml");
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -138,10 +129,10 @@ public class GuiControllerTimeBlitz implements Initializable {
 
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
-                    newGame(null);
+                    newGame();
                 }
                 if(keyEvent.getCode()== KeyCode.P){
-                    pauseGame(null);
+                    pauseGame();
                     keyEvent.consume();
                 }
             }
@@ -314,23 +305,7 @@ public class GuiControllerTimeBlitz implements Initializable {
         timeLabel.setText((timeLeft+" s"));
     }
 
-    public void refreshGameView(int[][] boardMatrix, ViewData brick){
-        refreshGameBackground(boardMatrix);
-        refreshBrick(brick,true);
-    }
 
-    private void printMatrix(int[][] matrix) {
-        if (matrix == null) {
-            System.out.println("null");
-            return;
-        }
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
     public void updateNextBrick(int[][] shape){
         nextBrickPane.getChildren().clear();
 
@@ -407,7 +382,7 @@ public class GuiControllerTimeBlitz implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());}
 
-            gamePanel.requestFocus();;
+            gamePanel.requestFocus();
         }
     }
 
@@ -425,7 +400,7 @@ public class GuiControllerTimeBlitz implements Initializable {
     }
 
 
-    public void newGame(ActionEvent actionEvent) {
+    public void newGame() {
         timeLine.stop();
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
@@ -435,7 +410,7 @@ public class GuiControllerTimeBlitz implements Initializable {
         isGameOver.setValue(Boolean.FALSE);
     }
 
-    public void pauseGame(ActionEvent actionEvent) {
+    public void pauseGame() {
 
 
         if (isPause.get()){
@@ -453,7 +428,7 @@ public class GuiControllerTimeBlitz implements Initializable {
             pauseOverlay.toFront();
 
             timeLine.pause();
-            gameControllerTimeBlitz.pauseTimer();;
+            gameControllerTimeBlitz.pauseTimer();
             isPause.set(true);
             pauseButton.setText("Resume");
 

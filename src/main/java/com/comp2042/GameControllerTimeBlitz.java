@@ -2,14 +2,11 @@ package com.comp2042;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.sql.Time;
 import java.util.Scanner;
 
 public class GameControllerTimeBlitz implements InputEventListener {
@@ -74,7 +71,7 @@ public class GameControllerTimeBlitz implements InputEventListener {
         int current= board.getScore().scoreProperty().get();
         if(current> highestScoreTime){
             highestScoreTime = current;
-            saveHighestScoreTime();;
+            saveHighestScoreTime();
             viewGuiController.updateHighestScore(highestScoreTime);
         }
     }

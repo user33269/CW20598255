@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox alignment="TOP_RIGHT" prefHeight="350.0" prefWidth="450.0" stylesheets="@howtoplayMenu.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.HowToPlayController">
-   <children>
-      <Button fx:id="closeButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="41.0">
-         <VBox.margin>
-            <Insets top="13.0" />
-         </VBox.margin>
-      </Button>
-   </children>
+<VBox alignment="TOP_RIGHT" prefHeight="350.0" prefWidth="450.0" stylesheets="@howtoplayMenu.css"
+      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.comp2042.HowToPlayController">
+    <Button fx:id="closeButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="41.0">
+        <VBox.margin>
+          <Insets top="13.0"/>
+        </VBox.margin>
+    </Button>
 </VBox>
