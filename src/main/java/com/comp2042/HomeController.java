@@ -22,7 +22,6 @@ public class HomeController {
         GuiControllerZen guiControllerZen = SceneLoader.load("/gameLayoutZen.fxml");
         new GameControllerZen(guiControllerZen);
 
-
     }
 
     @FXML
