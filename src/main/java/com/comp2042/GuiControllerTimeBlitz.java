@@ -95,39 +95,29 @@ public class GuiControllerTimeBlitz implements Initializable {
 
                 if (isPause.getValue() || isGameOver.getValue()) return;
 
-                switch(keyEvent.getCode()) {
-                         case LEFT->{
-                            refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
-                            keyEvent.consume();
-                        }
-                        case RIGHT->{
-                            refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
-                            keyEvent.consume();
-                        }
-                        case UP ->{
-                            refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
-                            keyEvent.consume();
-                        }
-                        case DOWN->{
-                            moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
-                            keyEvent.consume();
-                        }
+            switch(keyEvent.getCode()) {
+                case LEFT->
+                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
 
-                        case SPACE->{
-                            performQuickDrop();
-                            keyEvent.consume();
-                        }
-                        case C->{
-                            performHold();
-                            keyEvent.consume();
-                        }
-                        case N-> newGame();
-                        case P ->{
-                        pauseGame();
-                        keyEvent.consume();
-                        }
-                    }
+                case RIGHT->
+                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
 
+                case UP ->
+                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
+
+                case DOWN->
+                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+
+                case SPACE-> performQuickDrop();
+
+                case C-> performHold();
+
+                case N-> newGame();
+
+                case P -> pauseGame();
+
+            }
+            keyEvent.consume();
         });
         gameOverPanel.setVisible(false);
 
@@ -158,8 +148,8 @@ public class GuiControllerTimeBlitz implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
-        brickPanel.setLayoutX(BRICK_OFFSETX+gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-        brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+        brickPanel.setLayoutX(BRICK_OFFSETX +gamePanel.getLayoutX() + brick.getxPosition() * (brickPanel.getVgap() + BRICK_SIZE));
+        brickPanel.setLayoutY(BRICK_OFFSETX +gamePanel.getLayoutX() + brick.getxPosition() * (brickPanel.getVgap() + BRICK_SIZE));
 
 
         timeLine = new Timeline(new KeyFrame(
@@ -199,24 +189,27 @@ public class GuiControllerTimeBlitz implements Initializable {
                     Rectangle r = new Rectangle(blockSize, blockSize);
                     r.setFill(Color.GRAY);
                     r.setOpacity(0.3);
-                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize + (x+j)*hGap);
-                    r.setTranslateY(GHOST_OFFSETY +gamePanel.getLayoutY()+(y+i)*blockSize + (y+i)*vGap);
+                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*(BRICK_SIZE + hGap));
+                    r.setTranslateY(GHOST_OFFSETY+gamePanel.getLayoutY()+(y+i)*(BRICK_SIZE + vGap));
                     ghostPane.getChildren().add(r);}
                 }
             }
+    }
+    private void updateGhostBrick(ViewData brick){
+        Point ghostPos= eventListener.getGhostBrickPosition();
+        if (ghostPos != null){
+            drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
+        }
     }
 
     private void refreshBrick(ViewData brick, boolean updateNext) {
 
         if (isPause.getValue() == Boolean.FALSE) {
 
-            Point ghostPos= eventListener.getGhostBrickPosition();
-            if (ghostPos != null){
-                drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
-            }
+            updateGhostBrick(brick);
 
-            brickPanel.setLayoutX(BRICK_OFFSETX+brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            brickPanel.setLayoutX(BRICK_OFFSETX + brick.getxPosition() * (brickPanel.getVgap() + BRICK_SIZE));
+            brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * (brickPanel.getHgap() + BRICK_SIZE));
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
@@ -241,7 +234,14 @@ public class GuiControllerTimeBlitz implements Initializable {
         rectangle.setArcHeight(9);
         rectangle.setArcWidth(9);
     }
+    private void clearedRowsNotif(ClearRow clearRow){
+        if (clearRow!= null && clearRow.getLinesRemoved() > 0) {
+            NotificationPanel notificationPanel = new NotificationPanel("+" + clearRow.getScoreBonus());
+            groupNotification.getChildren().add(notificationPanel);
+            notificationPanel.showScore(groupNotification.getChildren());
 
+        }
+    }
     private void moveDown(MoveEvent event) {
         if (isPause.getValue()) return;
 
@@ -251,14 +251,6 @@ public class GuiControllerTimeBlitz implements Initializable {
         gamePanel.requestFocus();
     }
 
-    private void clearedRowsNotif(ClearRow clearRow){
-        if (clearRow!= null && clearRow.getLinesRemoved() > 0) {
-            NotificationPanel notificationPanel = new NotificationPanel("+" + clearRow.getScoreBonus());
-            groupNotification.getChildren().add(notificationPanel);
-            notificationPanel.showScore(groupNotification.getChildren());
-
-        }
-    }
 
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
@@ -326,11 +318,7 @@ public class GuiControllerTimeBlitz implements Initializable {
 
             refreshBrick(quickDrop.getViewData(),true);
 
-            if (quickDrop.getClearRow() != null && quickDrop.getClearRow().getLinesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + quickDrop.getClearRow().getScoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());}
-
+            clearedRowsNotif(quickDrop.getClearRow());
             gamePanel.requestFocus();
         }
     }
@@ -361,28 +349,30 @@ public class GuiControllerTimeBlitz implements Initializable {
 
     public void pauseGame() {
 
-
         if (isPause.get()){
-            pauseOverlay.setOpacity(0);
-            pauseOverlay.setVisible(false);
-            timeLine.play();
-            gameControllerTimeBlitz.resumeTimer();
-            isPause.set(false);
-            pauseButton.setText("Pause");
-
-
+            resumeGame();
         } else{
-            pauseOverlay.setOpacity(0.5);
-            pauseOverlay.setVisible(true);
-            pauseOverlay.toFront();
-
-            timeLine.pause();
-            gameControllerTimeBlitz.pauseTimer();
-            isPause.set(true);
-            pauseButton.setText("Resume");
-
-
+            pauseGameUI();
         }
         gamePanel.requestFocus();
+    }
+    private void resumeGame(){
+        pauseOverlay.setOpacity(0);
+        pauseOverlay.setVisible(false);
+        gameControllerTimeBlitz.resumeTimer();
+        timeLine.play();
+        isPause.set(false);
+        pauseButton.setText("Pause");
+    }
+
+    private void pauseGameUI(){
+        pauseOverlay.setOpacity(0.5);
+        pauseOverlay.setVisible(true);
+        pauseOverlay.toFront();
+
+        timeLine.pause();
+        gameControllerTimeBlitz.pauseTimer();
+        isPause.set(true);
+        pauseButton.setText("Resume");
     }
 }

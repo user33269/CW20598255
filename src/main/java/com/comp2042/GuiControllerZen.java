@@ -20,7 +20,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import jdk.jfr.Event;
+
 
 import java.awt.*;
 import java.net.URL;
@@ -204,8 +204,8 @@ public class GuiControllerZen implements Initializable {
         if (isPause.getValue() == Boolean.FALSE) {
             updateGhostBrick(brick);
 
-            brickPanel.setLayoutX(BRICK_OFFSETX+brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            brickPanel.setLayoutX(BRICK_OFFSETX + brick.getxPosition() * (brickPanel.getVgap() + BRICK_SIZE));
+            brickPanel.setLayoutY(BRICK_OFFSETY + gamePanel.getLayoutY()+ brick.getyPosition() * (brickPanel.getHgap() + BRICK_SIZE));
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
