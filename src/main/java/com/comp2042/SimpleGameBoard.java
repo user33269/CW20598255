@@ -28,11 +28,23 @@ public class SimpleGameBoard implements GameBoard {
         brickRotator = new BrickRotator();
         score = new Score();
     }
-    private boolean checkforCollision(Point currentOffset, int[][] shape){
+    public Point getCurrentOffset(){
+        return new Point(currentOffset);
+    }
+
+    public int getBoardHeight(){
+        return currentGameMatrix[0].length;
+    }
+
+    public int getRotationIndex(){
+        return brickRotator.getCurrentIndex();
+    }
+
+    public boolean checkforCollision(Point currentOffset, int[][] shape){
         return  MatrixOperations.intersect(currentGameMatrix,brickRotator.getCurrentShape(),(int)currentOffset.getX(),
                 (int)currentOffset.getY());
     }
-    private boolean moveIfNoCollision(int dx, int dy){
+    public boolean moveIfNoCollision(int dx, int dy){
         Point newOffset= new Point(currentOffset);
         newOffset.translate(dx,dy);
 
