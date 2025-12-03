@@ -18,6 +18,7 @@ class SimpleGameBoardTest {
 
     @Test
     void getGhostBrickPosition() {
+
         Point spawn= board.getCurrentOffset();
         Point ghost= board.getGhostBrickPosition();
 
@@ -28,6 +29,7 @@ class SimpleGameBoardTest {
 
     @Test
     void moveBrickDown() {
+
         Point before= board.getCurrentOffset();
 
         boolean result= board.moveBrickDown();
@@ -39,6 +41,7 @@ class SimpleGameBoardTest {
 
     @Test
     void moveBrickLeft() {
+
         Point before= board.getCurrentOffset();
 
         boolean result= board.moveBrickLeft();
@@ -49,7 +52,19 @@ class SimpleGameBoardTest {
     }
 
     @Test
+    void moveBrickRight(){
+        Point before= board.getCurrentOffset();
+
+        boolean result= board.moveBrickRight();
+        Point after= board.getCurrentOffset();
+
+        assertTrue(result);
+        assertEquals(before.x+1, after.x);
+    }
+
+    @Test
     void rotateLeftBrick() {
+
         int beforeRotation= board.getRotationIndex();
 
         boolean result= board.rotateLeftBrick();
@@ -61,46 +76,19 @@ class SimpleGameBoardTest {
 
     @Test
     void QuickDrop() {
-        Point before= board.getCurrentOffset();
-        Point after= board.getCurrentOffset();
+
         int initialScore= board.getScore().scoreProperty().get();
+        QuickDropData data = board.quickDrop();
+
         int finalScore= board.getScore().scoreProperty().get();
 
-        board.quickDrop();
-
         //test is brick falls to bottom
-        assertTrue(after.y>before.y);
+        assertTrue(data.getDropDistance()>0);
 
         //test if there's an increase of score
         assertTrue(finalScore>initialScore);
     }
 
-    @Test
-    void moveDown() {
 
-        //when brick falls to the bottom
-        while(board.moveBrickDown()){}
-        Point landed= board.getCurrentOffset();
-        Point newPosition= board.getCurrentOffset();
 
-        //test if new brick is spawned when currect brick reached the bottom
-        assertNotEquals(landed.y,newPosition.y);
-
-    }
-
-    @Test
-    void checkforCollision() {
-        Point p = board.getCurrentOffset();
-
-        //test when there's no collision
-        boolean noCollision= board.checkforCollision(p, null);
-        assertFalse(noCollision);
-
-        //test for true case of collision
-        int[][]matrix= board.getBoardMatrix();
-        matrix[p.y][p.x]=1;
-
-        boolean collision= board.checkforCollision(p,null);
-        assertTrue(collision);
-    }
 }

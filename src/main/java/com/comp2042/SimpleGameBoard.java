@@ -127,7 +127,7 @@ public class SimpleGameBoard implements GameBoard {
 
         boolean gameOver= createNewBrick();
 
-        return  new QuickDropData(clearRow,getViewData(),gameOver);
+        return  new QuickDropData(clearRow,getViewData(),gameOver,dropDistance);
     }
 
 
