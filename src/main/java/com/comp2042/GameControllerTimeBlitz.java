@@ -32,6 +32,8 @@ public class GameControllerTimeBlitz implements InputEventListener {
 
     }
 
+
+
     private void setupBrickFallTimer(){
         timeLine= new Timeline(new KeyFrame(
                 Duration.millis(600),

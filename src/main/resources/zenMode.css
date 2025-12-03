@@ -1,6 +1,6 @@
 
 .root {
-    -fx-background-image: url("gamebackground.jpeg");
+    -fx-background-image: url("Zen_bg.jpeg");
     -fx-background-size: 736px 460px;
 }
 .gameBoard {
