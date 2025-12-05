@@ -63,6 +63,7 @@ public class GameControllerZen implements InputEventListener {
     public void createNewGame() {
         gameBoard.newGame();
         viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
+
     }
 
     @Override
