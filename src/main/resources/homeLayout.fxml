@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="460.0" prefWidth="736.0" stylesheets="@homepage.css" xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.HomeController">
     <VBox alignment="CENTER" layoutX="369.0" layoutY="270.0" prefHeight="42.0" prefWidth="137.0">
-        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#ZenMode" prefHeight="39.0" prefWidth="137.0"/>
+        <Button mnemonicParsing="false" onAction="#ZenMode" prefHeight="39.0" prefWidth="137.0"/>
     </VBox>
     <VBox layoutX="369.0" layoutY="339.0">
         <Button mnemonicParsing="false" onAction="#timeMode" prefHeight="42.0" prefWidth="137.0"/>

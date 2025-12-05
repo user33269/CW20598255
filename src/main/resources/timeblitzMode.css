@@ -20,20 +20,14 @@
      -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6),12,0.3,0,0);
 }
 
-.nextBrickLabel {
+.nextBrickLabel,.holdBrickLabel {
     -fx-font-family: "Let's go Digital";
     -fx-padding:5 0 0 0;
     -fx-font-weight:bold;
     -fx-font-size: 16px;
     -fx-font-style: italic;
 }
-.holdBrickLabel {
-    -fx-font-family: "Let's go Digital";
-    -fx-padding:5 0 0 0;
-    -fx-font-weight:bold;
-    -fx-font-size: 16px;
-    -fx-font-style: italic;
-}
+
 
 .ipad-dark-grey {
     -fx-background-color: linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
@@ -44,12 +38,7 @@
     -fx-background-insets: 0, 1, 4, 5, 6;
     -fx-background-radius: 9, 8, 5, 4, 3;
     -fx-padding: 8;
-    /*-fx-font-family: "Helvetica";*/
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.2), 1, 0.0, 0, 1);
+
 }
 .rectangleBorder{
     -fx-border:black;
