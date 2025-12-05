@@ -34,11 +34,5 @@ public interface GameBoard {
 
     Point getGhostBrickPosition();
 
-    long getLockDelayStart();
-
-    void setLockDelayStart(long value);
-
-    long getMaxLockDelay();
-
     QuickDropData quickDrop();
 }

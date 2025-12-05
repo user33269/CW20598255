@@ -36,19 +36,11 @@ final class LBrick implements Brick {
         });
     }
 
-    private LBrick(LBrick other){
-        for (int[][] shape: other.brickMatrix){
-            brickMatrix.add(MatrixOperations.deepCopy(shape));
-        }
-    }
     @Override
     public int[][] getRotation(int index){
         return brickMatrix.get(index);
     }
-    @Override
-    public Brick clone() {
-        return new LBrick(this);
-    }
+
     @Override
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);

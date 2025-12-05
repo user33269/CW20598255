@@ -35,19 +35,12 @@ final class JBrick implements Brick {
                 {0, 0, 0, 0}
         });
     }
-    private JBrick(JBrick other){
-        for (int[][] shape: other.brickMatrix){
-            brickMatrix.add(MatrixOperations.deepCopy(shape));
-        }
-    }
+
     @Override
     public int[][] getRotation(int index){
         return brickMatrix.get(index);
     }
-    @Override
-    public Brick clone() {
-        return new JBrick(this);
-    }
+
 
     @Override
     public List<int[][]> getShapeMatrix() {
