@@ -51,7 +51,7 @@
          <RowConstraints />
       </rowConstraints>
    </GridPane>
-   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="198.0" spacing="10.0">
+   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="263.0" spacing="10.0">
       <children>
          <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestart" prefHeight="25.0" prefWidth="60.0" text="Restart">
             <font>
@@ -64,6 +64,11 @@
             </font>
          </Button>
          <Button fx:id="pauseButton" mnemonicParsing="false" onAction="#pauseGame" prefHeight="25.0" prefWidth="61.0" text="Pause">
+            <font>
+               <Font name="Bodoni MT" size="12.0" />
+            </font>
+         </Button>
+         <Button fx:id="HomeButton" mnemonicParsing="false" onAction="#returnHome" prefHeight="24.0" prefWidth="53.0" text="Home">
             <font>
                <Font name="Bodoni MT" size="12.0" />
             </font>

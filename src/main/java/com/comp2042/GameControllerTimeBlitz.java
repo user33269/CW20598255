@@ -2,6 +2,8 @@ package com.comp2042;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.util.Duration;
 
 import java.awt.*;
@@ -126,6 +128,9 @@ public class GameControllerTimeBlitz implements InputEventListener {
         viewGuiController.updateTime(timeLeft);
         startCountdownTimer();
     }
+
+
+
 
     @Override
     public DownData onDownEvent(MoveEvent event) {

@@ -16,5 +16,10 @@
             <Button fx:id="TimeMode" mnemonicParsing="false" onAction="#timeMode" prefHeight="42.0" prefWidth="137.0" />
          </children>
       </VBox>
+      <VBox layoutX="656.0" layoutY="12.0" prefHeight="68.0" prefWidth="77.0" AnchorPane.bottomAnchor="430.0" AnchorPane.leftAnchor="770.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#HowtoPlayMenu" prefHeight="69.0" prefWidth="77.0" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
