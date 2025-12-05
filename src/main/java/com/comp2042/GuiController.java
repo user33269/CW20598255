@@ -26,7 +26,6 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -76,7 +75,8 @@ public class GuiController implements Initializable {
     @FXML
     private Label scoreLabel;
 
-
+    @FXML
+    private Label highestScoreLabel;
     @FXML
     private StackPane holdPane;
     @FXML
@@ -213,17 +213,23 @@ public class GuiController implements Initializable {
         return returnPaint;
     }
 
-    private void drawGhostBrick(int[][] shape, int x, int y ){
+
+    private void drawGhostBrick(int[][] shape, int x, int y){
         ghostPane.getChildren().clear();
+
         int blockSize= BRICK_SIZE;
+
+        double hGap= brickPanel.getHgap();
+        double vGap= brickPanel.getVgap();
+
         for (int i=0; i< shape.length; i++){
             for(int j=0;j<shape[i].length; j++){
                 if (shape[i][j] !=0){
                     Rectangle r = new Rectangle(blockSize, blockSize);
                     r.setFill(Color.GRAY);
                     r.setOpacity(0.3);
-                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize);
-                    r.setTranslateY(-120 + gamePanel.getLayoutY()+(y+i)*blockSize);
+                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize + (x+j)*hGap);
+                    r.setTranslateY((y+i)*blockSize + (y+i)*vGap);
                     ghostPane.getChildren().add(r);}
                 }
             }
@@ -234,7 +240,7 @@ public class GuiController implements Initializable {
 
             Point ghostPos= eventListener.getGhostBrickPosition();
             if (ghostPos != null){
-                drawGhostBrick(brick.getBrickData(), ghostPos.x, ghostPos.y);
+                drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
             }
 
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
@@ -267,12 +273,16 @@ public class GuiController implements Initializable {
     private void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
+
+
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
+
+
             }
-            refreshBrick(downData.getViewData(),true);
+            refreshBrick(downData.getViewData(),false);
         }
         gamePanel.requestFocus();
     }
@@ -283,6 +293,12 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
+    }
+
+    public void updateHighestScore(int hs){
+        if (highestScoreLabel !=null){
+            highestScoreLabel.setText("Highest Score:"+ hs);
+        }
     }
 
     private void printMatrix(int[][] matrix) {
@@ -364,8 +380,16 @@ public class GuiController implements Initializable {
 
     private void performQuickDrop(){
         if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
-            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
-            refreshBrick(newBrick,true);
+            QuickDropData quickDrop= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+
+            refreshBrick(quickDrop.getViewData(),true);
+
+            if (quickDrop.getClearRow() != null && quickDrop.getClearRow().getLinesRemoved() > 0) {
+                NotificationPanel notificationPanel = new NotificationPanel("+" + quickDrop.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(notificationPanel);
+                notificationPanel.showScore(groupNotification.getChildren());}
+
+            gamePanel.requestFocus();;
         }
     }
 
@@ -394,6 +418,7 @@ public class GuiController implements Initializable {
             isPause.set(false);
             pauseButton.setText("Pause");
             pauseOverlay.setVisible(false);
+            pauseOverlay.setOpacity(0);
 
         } else{
             timeLine.pause();

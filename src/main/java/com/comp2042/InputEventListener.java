@@ -14,7 +14,7 @@ public interface InputEventListener {
 
     void createNewGame();
 
-    ViewData onQuickDropEvent(MoveEvent event);
+    QuickDropData onQuickDropEvent(MoveEvent event);
 
     ViewData onHoldEvent(MoveEvent event);
 

@@ -29,6 +29,7 @@ public class NotificationPanel extends BorderPane {
     }
 
     public void showScore(ObservableList<Node> list) {
+        this.setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
         TranslateTransition tt = new TranslateTransition(Duration.millis(2500), this);
         tt.setToY(this.getLayoutY() - 40);
@@ -41,6 +42,6 @@ public class NotificationPanel extends BorderPane {
                 list.remove(NotificationPanel.this);
             }
         });
-        transition.play();
+        transition.playFromStart();
     }
 }

@@ -47,6 +47,7 @@ public class SimpleBoard implements Board {
     }
 
 
+
     @Override
     public int[][] getHeldBrickShape(){
         if (heldBrick == null) return null;
@@ -129,10 +130,27 @@ public class SimpleBoard implements Board {
         return currentGameMatrix;
     }
 
+    private int calcGhostY(){
+        int ghostY= (int) currentOffset.getY();
+
+        while(!MatrixOperations.intersect(
+                currentGameMatrix,
+                brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(),
+                ghostY
+        )){
+            ghostY++;
+        }
+
+        return ghostY;
+    }
+
     @Override
     public ViewData getViewData() {
+        int ghostY= calcGhostY();
+
         return new ViewData(
-                brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0));
+                brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0),ghostY);
     }
 
     @Override
