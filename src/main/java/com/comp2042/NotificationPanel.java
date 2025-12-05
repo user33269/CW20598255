@@ -14,8 +14,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * This is a panel to display temporary notification which is the score bonus in Tetris Game GUI.
+ */
 public class NotificationPanel extends BorderPane {
 
+    /**
+     * Constructs a new Notification Panel with specified message.
+     * It is styled with a glowing effect.
+     * @param text score text to be displayed in game
+     */
     public NotificationPanel(String text) {
         setMinHeight(200);
         setMinWidth(850);
@@ -28,6 +36,10 @@ public class NotificationPanel extends BorderPane {
 
     }
 
+    /**
+     * Animation to animates the notification panel to show score.
+     * @param list list of nodes containing this panel.
+     */
     public void showScore(ObservableList<Node> list) {
         this.setOpacity(1);
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);

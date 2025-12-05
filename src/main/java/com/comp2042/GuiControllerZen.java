@@ -26,6 +26,11 @@ import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This is the GUI controller for Zen mode of Tetris.
+ * It manages user input, highest score display and game-over status.
+ * It also handles rendering of gameboard, ghost bricks, current and next bricks and held bricks.
+ */
 public class GuiControllerZen implements Initializable {
 
     private static final int BRICK_SIZE = 20;
@@ -84,6 +89,16 @@ public class GuiControllerZen implements Initializable {
         SceneLoader.load("/homeLayout.fxml");
     }
 
+    /**
+     * Initializes controller, load fonts and set up all key bindings.
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
@@ -125,6 +140,11 @@ public class GuiControllerZen implements Initializable {
         reflection.setTopOffset(-12);
     }
 
+    /**
+     * Initialises game board view and current brick panel.
+     * @param boardMatrix current game board state
+     * @param brick current brick and its position
+     */
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
@@ -217,6 +237,10 @@ public class GuiControllerZen implements Initializable {
             updateNextBrick(brick.getNextBrickData());}
     }
 
+    /**
+     * Updates game board background to current state of board matrix
+     * @param board the 2D matrix representing current game board state
+     */
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -247,15 +271,26 @@ public class GuiControllerZen implements Initializable {
         gamePanel.requestFocus();
     }
 
-
+    /**
+     * Sets event listener that handles game ations
+     * @param eventListener the instance to set
+     */
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
     }
 
+    /**
+     * bind score to an IntergerProperty
+     * @param integerProperty represents current score
+     */
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
     }
 
+    /**
+     * Updates the displayed highest score/
+     * @param hs the highest score to display
+     */
     public void updateHighestScore(int hs){
         if (highestScoreLabel !=null){
             highestScoreLabel.setText("Highest Score:"+ hs);
@@ -280,9 +315,17 @@ public class GuiControllerZen implements Initializable {
             }
         }
     }
+    /**
+     * Updates hold brick panel with currently held brick shape
+     * @param shape the 2D matrix representing the held brick shape.
+     */
     public void updateHeldBrick(int[][] shape){
         drawRectanglesToPane(shape,holdPane);
     }
+    /**
+     * Updates next brick panel with upcoming brick shape
+     * @param shape the 2D matrix representing the held brick shape.
+     */
     public void updateNextBrick(int[][] shape){
         drawRectanglesToPane(shape,nextBrickPane);
     }
@@ -312,13 +355,19 @@ public class GuiControllerZen implements Initializable {
             gamePanel.requestFocus();
         }
     }
-
+    /**
+     * display Game Over panel.
+     */
     public void gameOver() {
         timeLine.stop();
         gameOverPanel.setVisible(true);
         isGameOver.setValue(Boolean.TRUE);
     }
 
+    /**
+     * Starts a new game.
+     * Resets UI elements such as held brick and next brick.
+     */
     public void newGame() {
         timeLine.stop();
         gameOverPanel.setVisible(false);
@@ -335,6 +384,9 @@ public class GuiControllerZen implements Initializable {
         isGameOver.setValue(Boolean.FALSE);
     }
 
+    /**
+     * Pause or resume game based on current pause state
+     */
     public void pauseGame() {
 
         if (isPause.get()){
