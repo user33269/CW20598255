@@ -31,4 +31,10 @@ public interface Board {
     int[][] getHeldBrickShape();
 
     Point getGhostBrickPosition();
+
+    long getLockDelayStart();
+
+    void setLockDelayStart(long value);
+
+    long getMaxLockDelay();
 }

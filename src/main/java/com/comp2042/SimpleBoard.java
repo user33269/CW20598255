@@ -46,7 +46,21 @@ public class SimpleBoard implements Board {
        return ghost;
     }
 
+    private long lockDelayStart =-1;
+    private static final long MAX_LOCK_DELAY =500;
 
+    @Override
+    public long getLockDelayStart(){
+        return  lockDelayStart;
+    }
+    @Override
+    public void setLockDelayStart(long value){
+        lockDelayStart=value;
+    }
+    @Override
+    public long getMaxLockDelay(){
+        return  MAX_LOCK_DELAY;
+    }
 
     @Override
     public int[][] getHeldBrickShape(){
@@ -57,7 +71,8 @@ public class SimpleBoard implements Board {
 
     @Override
     public boolean moveBrickDown() {
-        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
+
+        int[][] currentMatrix = currentGameMatrix;
         Point p = new Point(currentOffset);
         p.translate(0, 1);
         boolean conflict = MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(), (int) p.getX(), (int) p.getY());
@@ -115,7 +130,7 @@ public class SimpleBoard implements Board {
     public boolean createNewBrick() {
         this.currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
-        currentOffset = new Point(4, 10);
+        currentOffset = new Point(4, 8);
 
         canHold=true;
         return MatrixOperations.intersect(

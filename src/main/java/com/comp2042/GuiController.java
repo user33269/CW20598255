@@ -144,9 +144,6 @@ public class GuiController implements Initializable {
     }
 
 
-
-
-
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
@@ -167,7 +164,7 @@ public class GuiController implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
-        brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
+        brickPanel.setLayoutX(323+gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
 
@@ -229,13 +226,14 @@ public class GuiController implements Initializable {
                     r.setFill(Color.GRAY);
                     r.setOpacity(0.3);
                     r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize + (x+j)*hGap);
-                    r.setTranslateY((y+i)*blockSize + (y+i)*vGap);
+                    r.setTranslateY(-58+gamePanel.getLayoutY()+(y+i)*blockSize + (y+i)*vGap);
                     ghostPane.getChildren().add(r);}
                 }
             }
     }
 
     private void refreshBrick(ViewData brick, boolean updateNext) {
+
         if (isPause.getValue() == Boolean.FALSE) {
 
             Point ghostPos= eventListener.getGhostBrickPosition();
@@ -243,7 +241,7 @@ public class GuiController implements Initializable {
                 drawGhostBrick(brick.getBrickData(), brick.getxPosition(),brick.getGhostY());
             }
 
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
+            brickPanel.setLayoutX(323+brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
@@ -414,18 +412,21 @@ public class GuiController implements Initializable {
 
 
         if (isPause.get()){
+            pauseOverlay.setOpacity(0);
+            pauseOverlay.setVisible(false);
             timeLine.play();
             isPause.set(false);
             pauseButton.setText("Pause");
-            pauseOverlay.setVisible(false);
-            pauseOverlay.setOpacity(0);
+
 
         } else{
+            pauseOverlay.setOpacity(0.5);
+            pauseOverlay.setVisible(true);
+            pauseOverlay.toFront();
+
             timeLine.pause();
             isPause.set(true);
             pauseButton.setText("Resume");
-            pauseOverlay.setVisible(true);
-            pauseOverlay.toFront();
 
         }
         gamePanel.requestFocus();

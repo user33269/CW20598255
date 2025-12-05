@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class GameController  implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private Board board = new SimpleBoard(23, 10);
 
     private int highestScore=0;
     private final String HIGHEST_SCORE_FILE= "highestScore.txt";
@@ -60,11 +60,23 @@ public class GameController  implements InputEventListener {
         }
     }
 
+
     @Override
     public DownData onDownEvent(MoveEvent event) {
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
         if (!canMove) {
+            
+            if (board.getLockDelayStart()<0){
+                board.setLockDelayStart(System.currentTimeMillis());
+                return new DownData(null,board.getViewData());
+            }
+
+            if (System.currentTimeMillis()- board.getLockDelayStart()<board.getMaxLockDelay()){
+                return new DownData(null,board.getViewData());
+            }
+
+            board.setLockDelayStart(-1);
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
             if (clearRow.getLinesRemoved() > 0) {
@@ -77,6 +89,8 @@ public class GameController  implements InputEventListener {
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
         } else {
+
+            board.setLockDelayStart(-1);
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(1);
                 checkHighestScore();
