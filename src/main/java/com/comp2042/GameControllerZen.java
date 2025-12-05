@@ -3,49 +3,48 @@ package com.comp2042;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Writer;
 import java.util.Scanner;
 
-public class GameController  implements InputEventListener {
+public class GameControllerZen implements InputEventListener {
 
     private Board board = new SimpleBoard(23, 10);
 
-    private int highestScore=0;
-    private final String HIGHEST_SCORE_FILE= "highestScore.txt";
-    private final GuiController viewGuiController;
+    private int highestScoreZen=0;
+    private final String HIGHEST_SCORE_FILE_ZEN = "highestScoreZen.txt";
+    private final GuiControllerZen viewGuiController;
 
-    public GameController(GuiController c) {
+    public GameControllerZen(GuiControllerZen c) {
         viewGuiController = c;
-        loadHighestScore();
+        loadHighestScoreZen();
         board.createNewBrick();
         viewGuiController.setEventListener(this);
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
 
-        viewGuiController.updateHighestScore(highestScore);
+        viewGuiController.updateHighestScore(highestScoreZen);
     }
-    private void loadHighestScore(){
+    private void loadHighestScoreZen(){
         try{
-            File file= new File(HIGHEST_SCORE_FILE);
+            File file= new File(HIGHEST_SCORE_FILE_ZEN);
             if (!file.exists()){
-                highestScore=0;
+                highestScoreZen=0;
                 return;
             }
             Scanner scanner= new Scanner(file);
             if(scanner.hasNextInt()){
-                highestScore=scanner.nextInt();
+                highestScoreZen=scanner.nextInt();
             }
             scanner.close();
         }catch (Exception e){
             e.printStackTrace();
-            highestScore=0;
+            highestScoreZen=0;
         }
     }
 
     private void saveHighestScore(){
         try{
-            FileWriter writer= new FileWriter(HIGHEST_SCORE_FILE);
-            writer.write(Integer.toString(highestScore));
+            FileWriter writer= new FileWriter(HIGHEST_SCORE_FILE_ZEN);
+            writer.write(Integer.toString(highestScoreZen));
             writer.close();
         }catch (Exception e){
             e.printStackTrace();
@@ -53,10 +52,10 @@ public class GameController  implements InputEventListener {
     }
     private void checkHighestScore(){
         int current= board.getScore().scoreProperty().get();
-        if(current>highestScore){
-            highestScore= current;
+        if(current>highestScoreZen){
+            highestScoreZen= current;
             saveHighestScore();;
-            viewGuiController.updateHighestScore(highestScore);
+            viewGuiController.updateHighestScore(highestScoreZen);
         }
     }
 
