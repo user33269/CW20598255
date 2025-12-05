@@ -100,11 +100,4 @@ public class MatrixOperations {
         return list.stream().map(MatrixOperations::copy).collect(Collectors.toList());
     }
 
-    public static int[][] deepCopy(int[][] shape) {
-        int[][]copy = new int[shape.length][];
-        for (int i=0; i< shape.length;i++){
-            copy[i]=shape[i].clone();
-        }
-        return copy;
-    }
 }

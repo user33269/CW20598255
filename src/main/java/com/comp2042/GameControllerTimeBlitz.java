@@ -36,7 +36,6 @@ public class GameControllerTimeBlitz implements InputEventListener {
         timeLine= new Timeline(new KeyFrame(
                 Duration.millis(600),
                 e-> onDownEvent(new MoveEvent(
-                        EventType.DOWN,
                         EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);

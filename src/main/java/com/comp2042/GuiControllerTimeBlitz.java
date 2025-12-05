@@ -97,16 +97,16 @@ public class GuiControllerTimeBlitz implements Initializable {
 
             switch(keyEvent.getCode()) {
                 case LEFT->
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
+                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventSource.USER)),true);
 
                 case RIGHT->
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
+                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventSource.USER)),true);
 
                 case UP ->
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
+                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventSource.USER)),true);
 
                 case DOWN->
-                        moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                        moveDown(new MoveEvent(EventSource.USER));
 
                 case SPACE-> performQuickDrop();
 
@@ -154,7 +154,7 @@ public class GuiControllerTimeBlitz implements Initializable {
 
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(600),
-                ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+                ae -> moveDown(new MoveEvent(EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
@@ -293,7 +293,7 @@ public class GuiControllerTimeBlitz implements Initializable {
     private void performHold(){
         if(!isPause.get() &&isGameOver.getValue()==Boolean.FALSE){
 
-            ViewData newBrick = eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
+            ViewData newBrick = eventListener.onHoldEvent(new MoveEvent(EventSource.USER));
             if (newBrick!= null) {
 
                 refreshBrick(newBrick, false);
@@ -314,7 +314,7 @@ public class GuiControllerTimeBlitz implements Initializable {
 
     private void performQuickDrop(){
         if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
-            QuickDropData quickDrop= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+            QuickDropData quickDrop= eventListener.onQuickDropEvent(new MoveEvent(EventSource.USER));
 
             refreshBrick(quickDrop.getViewData(),true);
 
