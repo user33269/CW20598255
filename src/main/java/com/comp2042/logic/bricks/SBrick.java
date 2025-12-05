@@ -23,7 +23,19 @@ final class SBrick implements Brick {
                 {0, 0, 0, 0}
         });
     }
-
+    private SBrick(SBrick other){
+        for (int[][] shape: other.brickMatrix){
+            brickMatrix.add(MatrixOperations.deepCopy(shape));
+        }
+    }
+    @Override
+    public int[][] getRotation(int index){
+        return brickMatrix.get(index);
+    }
+    @Override
+    public Brick clone() {
+        return new SBrick(this);
+    }
     @Override
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);

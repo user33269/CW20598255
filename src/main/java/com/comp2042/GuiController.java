@@ -11,17 +11,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class GuiController implements Initializable {
@@ -68,6 +73,23 @@ public class GuiController implements Initializable {
         javafx.application.Platform.exit();
     }
 
+    @FXML
+    private Label scoreLabel;
+
+
+    @FXML
+    private StackPane holdPane;
+    @FXML
+    private StackPane nextBrickPane;
+
+    @FXML
+    private Button pauseButton;
+
+    @FXML
+    private Pane pauseOverlay;
+
+    @FXML
+    private Pane ghostPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,24 +101,37 @@ public class GuiController implements Initializable {
             public void handle(KeyEvent keyEvent) {
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)),true);
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
+                    if(keyEvent.getCode()== KeyCode.SPACE){
+                        performQuickDrop();
+                        keyEvent.consume();
+                    }
+                    if(keyEvent.getCode()== KeyCode.C){
+                        performHold();
+                        keyEvent.consume();
+                    }
+
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
+                }
+                if(keyEvent.getCode()== KeyCode.P){
+                    pauseGame(null);
+                    keyEvent.consume();
                 }
             }
         });
@@ -107,6 +142,10 @@ public class GuiController implements Initializable {
         reflection.setTopOpacity(0.9);
         reflection.setTopOffset(-12);
     }
+
+
+
+
 
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
@@ -129,17 +168,17 @@ public class GuiController implements Initializable {
             }
         }
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-        brickPanel.setLayoutY(-80 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+        brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
 
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400),
+                Duration.millis(700),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
-
+    
     private Paint getFillColor(int i) {
         Paint returnPaint;
         switch (i) {
@@ -174,17 +213,41 @@ public class GuiController implements Initializable {
         return returnPaint;
     }
 
+    private void drawGhostBrick(int[][] shape, int x, int y ){
+        ghostPane.getChildren().clear();
+        int blockSize= BRICK_SIZE;
+        for (int i=0; i< shape.length; i++){
+            for(int j=0;j<shape[i].length; j++){
+                if (shape[i][j] !=0){
+                    Rectangle r = new Rectangle(blockSize, blockSize);
+                    r.setFill(Color.GRAY);
+                    r.setOpacity(0.3);
+                    r.setTranslateX(gamePanel.getLayoutX() +(x+j)*blockSize);
+                    r.setTranslateY(-120 + gamePanel.getLayoutY()+(y+i)*blockSize);
+                    ghostPane.getChildren().add(r);}
+                }
+            }
+    }
 
-    private void refreshBrick(ViewData brick) {
+    private void refreshBrick(ViewData brick, boolean updateNext) {
         if (isPause.getValue() == Boolean.FALSE) {
+
+            Point ghostPos= eventListener.getGhostBrickPosition();
+            if (ghostPos != null){
+                drawGhostBrick(brick.getBrickData(), ghostPos.x, ghostPos.y);
+            }
+
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(-80 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            brickPanel.setLayoutY(-120 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
                 }
             }
+
         }
+        if (updateNext) {
+            updateNextBrick(brick.getNextBrickData());}
     }
 
     public void refreshGameBackground(int[][] board) {
@@ -209,7 +272,7 @@ public class GuiController implements Initializable {
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
-            refreshBrick(downData.getViewData());
+            refreshBrick(downData.getViewData(),true);
         }
         gamePanel.requestFocus();
     }
@@ -219,7 +282,93 @@ public class GuiController implements Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
     }
+
+    private void printMatrix(int[][] matrix) {
+        if (matrix == null) {
+            System.out.println("null");
+            return;
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    public void updateNextBrick(int[][] shape){
+        nextBrickPane.getChildren().clear();
+
+        if (shape ==null) return;
+
+
+        int blocksize=20;
+
+        for (int y=0; y< shape.length; y++){
+            for(int x= 0; x<shape[y].length; x++){
+                if (shape[y][x] !=0){
+                    Rectangle rect = new Rectangle(blocksize,blocksize);
+                    rect.setFill(getFillColor(shape[y][x]));
+                    rect.setStroke(Color.BLACK);
+                    rect.setStrokeWidth(1);
+
+                    rect.setTranslateX(x*blocksize);
+                    rect.setTranslateY(y*blocksize);
+
+                    nextBrickPane.getChildren().add(rect);
+                }
+            }
+        }
+    }
+    private void performHold(){
+        if(isPause.get()== Boolean.FALSE &&isGameOver.getValue()==Boolean.FALSE){
+
+            ViewData newBrick = eventListener.onHoldEvent(new MoveEvent(EventType.HOLD,EventSource.USER));
+            if (newBrick!= null) {
+
+                refreshBrick(newBrick, false);
+                int[][] heldShape = eventListener.getHeldBrickShape();
+
+                updateHeldBrick(heldShape);
+            }
+        }
+    }
+
+    public void updateHeldBrick(int[][] shape){
+        holdPane.getChildren().clear();
+
+        if (shape ==null) return;
+
+
+        int blocksize=20;
+
+        for (int y=0; y< shape.length; y++){
+            for(int x= 0; x<shape[y].length; x++){
+                if (shape[y][x] !=0){
+                    Rectangle rectangle = new Rectangle(blocksize,blocksize);
+                    rectangle.setFill(getFillColor(shape[y][x]));
+                    rectangle.setStroke(Color.BLACK);
+                    rectangle.setStrokeWidth(1);
+
+                    rectangle.setTranslateX(x*blocksize);
+                    rectangle.setTranslateY(y*blocksize);
+
+                    holdPane.getChildren().add(rectangle);
+                }
+            }
+        }
+    }
+
+
+
+    private void performQuickDrop(){
+        if (isPause.getValue()== Boolean.FALSE && isGameOver.getValue()== Boolean.FALSE){
+            ViewData newBrick= eventListener.onQuickDropEvent(new MoveEvent(EventType.QUICK_DROP,EventSource.USER));
+            refreshBrick(newBrick,true);
+        }
+    }
+
 
     public void gameOver() {
         timeLine.stop();
@@ -238,6 +387,22 @@ public class GuiController implements Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
+
+
+        if (isPause.get()){
+            timeLine.play();
+            isPause.set(false);
+            pauseButton.setText("Pause");
+            pauseOverlay.setVisible(false);
+
+        } else{
+            timeLine.pause();
+            isPause.set(true);
+            pauseButton.setText("Resume");
+            pauseOverlay.setVisible(true);
+            pauseOverlay.toFront();
+
+        }
         gamePanel.requestFocus();
     }
 }

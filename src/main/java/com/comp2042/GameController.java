@@ -1,6 +1,8 @@
 package com.comp2042;
 
-public class GameController implements InputEventListener {
+import java.awt.*;
+
+public class GameController  implements InputEventListener {
 
     private Board board = new SimpleBoard(25, 10);
 
@@ -62,4 +64,47 @@ public class GameController implements InputEventListener {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
+
+    @Override
+    public  ViewData onHoldEvent(MoveEvent event){
+        ViewData viewData= board.holdBrick();
+
+        int[][]heldShape= board.getHeldBrickShape();
+        viewGuiController.updateHeldBrick(heldShape);
+        return viewData;
+    }
+
+    @Override
+    public int[][] getHeldBrickShape() {
+        return board.getHeldBrickShape();
+    }
+
+    @Override
+    public Point getGhostBrickPosition(){
+        return board.getGhostBrickPosition();
+    }
+
+
+    @Override
+    public ViewData onQuickDropEvent(MoveEvent event) {
+        boolean canMove= true;
+
+        while (canMove){
+            canMove= board.moveBrickDown();
+        }
+        board.mergeBrickToBackground();;
+        ClearRow clearRow=board.clearRows();
+
+        if (clearRow.getLinesRemoved()>0){
+            board.getScore().add(clearRow.getScoreBonus());
+        }
+
+        if (board.createNewBrick()){
+            viewGuiController.gameOver();
+        }
+
+        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        return board.getViewData();
+    }
+
 }

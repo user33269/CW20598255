@@ -5,4 +5,8 @@ import java.util.List;
 public interface Brick {
 
     List<int[][]> getShapeMatrix();
+
+    Brick clone();
+
+    int[][] getRotation(int index);
 }

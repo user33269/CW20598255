@@ -17,7 +17,19 @@ final class OBrick implements Brick {
                 {0, 0, 0, 0}
         });
     }
-
+    private OBrick(OBrick other){
+        for (int[][] shape: other.brickMatrix){
+            brickMatrix.add(MatrixOperations.deepCopy(shape));
+        }
+    }
+    @Override
+    public int[][] getRotation(int index){
+        return brickMatrix.get(index);
+    }
+    @Override
+    public Brick clone() {
+        return new OBrick(this);
+    }
     @Override
     public List<int[][]> getShapeMatrix() {
         return MatrixOperations.deepCopyList(brickMatrix);
