@@ -11,6 +11,12 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
+/**
+ * This is the controller for Tetris game's home screen.
+ * This controller handles navigation to different game modes (Zen mode and Time BLitz mode).
+ * It also has navigation to display "How to Play" instructions window.
+ * It uses button that triggers one of the event handling methods in this class.
+ */
 public class HomeController {
 
     @FXML
