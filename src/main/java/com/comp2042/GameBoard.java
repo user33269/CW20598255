@@ -2,9 +2,11 @@ package com.comp2042;
 
 import java.awt.*;
 
-public interface Board {
+public interface GameBoard {
 
     boolean moveBrickDown();
+
+    DownData moveDown();
 
     boolean moveBrickLeft();
 
@@ -37,4 +39,6 @@ public interface Board {
     void setLockDelayStart(long value);
 
     long getMaxLockDelay();
+
+    QuickDropData quickDrop();
 }

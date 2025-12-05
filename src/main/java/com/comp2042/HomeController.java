@@ -18,7 +18,7 @@ public class HomeController {
     private Button zenButton;
 
     @FXML
-    private void ZenMode(ActionEvent event)throws IOException {
+    private void ZenMode(ActionEvent event){
         GuiControllerZen guiControllerZen = SceneLoader.load("/gameLayoutZen.fxml");
         new GameControllerZen(guiControllerZen);
 
@@ -26,8 +26,8 @@ public class HomeController {
     }
 
     @FXML
-    private void timeMode(ActionEvent event)throws IOException{
-        GuiControllerTimeBlitz guiControllerTimeBlitz= SceneLoader.load("/gameLayoutTimeBlitz.fxml");
+    private void timeMode(ActionEvent event){
+        GuiControllerTimeBlitz guiControllerTimeBlitz = SceneLoader.load("/gameLayoutTimeBlitz.fxml");
         GameControllerTimeBlitz game= new GameControllerTimeBlitz(guiControllerTimeBlitz);
         guiControllerTimeBlitz.setGameControllerTimeBlitz(game);
     }

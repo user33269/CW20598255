@@ -6,7 +6,7 @@ import com.comp2042.logic.bricks.RandomBrickGenerator;
 
 import java.awt.*;
 
-public class SimpleBoard implements Board {
+public class SimpleGameBoard implements GameBoard {
 
     private final int width;
     private final int height;
@@ -18,10 +18,9 @@ public class SimpleBoard implements Board {
     private Brick heldBrick= null ;
     private boolean canHold=true;
     private Brick currentBrick;
-    private Brick nextBrick;
     private int heldRotation;
 
-    public SimpleBoard(int width, int height) {
+    public SimpleGameBoard(int width, int height) {
         this.width = width;
         this.height = height;
         currentGameMatrix = new int[width][height];
@@ -83,6 +82,50 @@ public class SimpleBoard implements Board {
             return true;
         }
     }
+
+    public DownData moveDown(){
+
+        boolean canMove = moveBrickDown();
+        ClearRow clearRow;
+
+        if (!canMove) {
+
+            mergeBrickToBackground();
+
+            clearRow = clearRows();
+            if (clearRow.getLinesRemoved() > 0) {
+               getScore().add(clearRow.getScoreBonus());
+            }
+
+            boolean gameOver= createNewBrick();
+
+            return new DownData(clearRow,getViewData(), gameOver);
+        } else {
+            return new DownData(null, getViewData(), false);
+        }
+
+    }
+
+    public QuickDropData quickDrop(){
+        int dropDistance=0;
+
+        while (moveBrickDown()) {
+            dropDistance++;
+        }
+        mergeBrickToBackground();
+
+        score.add(dropDistance*2);
+
+        ClearRow clearRow= clearRows();
+        if(clearRow.getLinesRemoved()>0){
+            score.add(clearRow.getScoreBonus());
+        }
+
+        boolean gameOver= createNewBrick();
+
+        return  new QuickDropData(clearRow,getViewData(),gameOver);
+    }
+
 
 
     @Override
@@ -194,8 +237,6 @@ public class SimpleBoard implements Board {
         createNewBrick();
     }
 
-
-
     @Override
     public ViewData holdBrick() {
         if (!canHold || currentBrick == null){
@@ -225,4 +266,6 @@ public class SimpleBoard implements Board {
         canHold= false;
         return getViewData();
     }
+
+
 }

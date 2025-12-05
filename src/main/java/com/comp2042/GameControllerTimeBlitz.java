@@ -2,247 +2,163 @@ package com.comp2042;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.util.Duration;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.sql.Time;
-import java.util.Scanner;
 
 public class GameControllerTimeBlitz implements InputEventListener {
 
-    private Board board = new SimpleBoard(23, 10);
+    private GameBoard gameBoard = new SimpleGameBoard(23, 10);
 
-    private int highestScoreTime =0;
-    private final String HIGHEST_SCORE_FILE_TIME = "highestScore_timeblitz.txt";
+    private final HighestScoreManager highestScoreManager;
     private final GuiControllerTimeBlitz viewGuiController;
 
     private Timeline timeLine;
+    private TimeManager timeManager;
+
     public GameControllerTimeBlitz(GuiControllerTimeBlitz c) {
         viewGuiController = c;
-        loadHighestScoreTime();
-        board.createNewBrick();
+        this.highestScoreManager= new HighestScoreManager("highestScore_timeblitz.txt");
+
+        gameBoard.createNewBrick();
         viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
+        viewGuiController.initGameView(gameBoard.getBoardMatrix(), gameBoard.getViewData());
+        viewGuiController.bindScore(gameBoard.getScore().scoreProperty());
 
-        viewGuiController.updateHighestScore(highestScoreTime);
+        viewGuiController.updateHighestScore(highestScoreManager.getHighestScore());
 
+        setupBrickFallTimer();
+        setupCountdownTimer();
+
+    }
+
+    private void setupBrickFallTimer(){
         timeLine= new Timeline(new KeyFrame(
-                Duration.millis(700),
+                Duration.millis(600),
                 e-> onDownEvent(new MoveEvent(
                         EventType.DOWN,
                         EventSource.THREAD))
-                ));
-                timeLine.setCycleCount(Timeline.INDEFINITE);
-                timeLine.play();
-
-                startCountdownTimer();
-
-    }
-    private void loadHighestScoreTime(){
-        try{
-            File file= new File(HIGHEST_SCORE_FILE_TIME);
-            if (!file.exists()){
-                highestScoreTime =0;
-                return;
-            }
-            Scanner scanner= new Scanner(file);
-            if(scanner.hasNextInt()){
-                highestScoreTime =scanner.nextInt();
-            }
-            scanner.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            highestScoreTime =0;
-        }
-    }
-
-    private void saveHighestScoreTime(){
-        try{
-            FileWriter writer= new FileWriter(HIGHEST_SCORE_FILE_TIME);
-            writer.write(Integer.toString(highestScoreTime));
-            writer.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void checkHighestScoreTime(){
-        int current= board.getScore().scoreProperty().get();
-        if(current> highestScoreTime){
-            highestScoreTime = current;
-            saveHighestScoreTime();;
-            viewGuiController.updateHighestScore(highestScoreTime);
-        }
-    }
-
-    private int timeLeft= 120;
-    private Timeline countdownTimer;
-
-    private void startCountdownTimer(){
-        countdownTimer= new Timeline(new KeyFrame(
-                Duration.seconds(1),
-                e->{
-                    timeLeft--;
-                    viewGuiController.updateTime(timeLeft);
-
-                if(timeLeft<=0){
-                    countdownTimer.stop();
-                    endTimeBlitz();
-        }}
-
         ));
-        countdownTimer.setCycleCount(Timeline.INDEFINITE);
-        countdownTimer.play();
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+        timeLine.play();
+
     }
 
-    private void endTimeBlitz(){
-        timeLine.stop();
-        checkHighestScoreTime();
-        viewGuiController.gameOver();
+    private void setupCountdownTimer(){
+        timeManager= new TimeManager(120, new TimeManager.TimeListener() {
+
+            @Override
+            public void updateTime(int timeLeft){
+                viewGuiController.updateTime(timeLeft);
+            }
+
+            @Override
+            public void endTime(){
+                endTimeblitz();
+            }
+        });
+        timeManager.start();
     }
 
     public void stopTimer(){
-        if(countdownTimer != null){
-            countdownTimer.stop();
-        }
+        timeManager.stop();
     }
 
     public void pauseTimer(){
-        if(countdownTimer != null){
-            countdownTimer.pause();
-        }
+        timeManager.pause();
     }
     public void resumeTimer(){
-        if(countdownTimer != null){
-            countdownTimer.play();
-        }
+        timeManager.resume();
     }
 
     public void restartTimer(){
-        countdownTimer.stop();
-        timeLeft=120;
-        viewGuiController.updateTime(timeLeft);
-        startCountdownTimer();
+        timeManager.restart(120);
+        viewGuiController.updateTime(120);
     }
 
-
+    private void endTimeblitz(){
+        timeLine.stop();
+        int current= gameBoard.getScore().scoreProperty().get();
+        highestScoreManager.checkHighestScore(current);
+        viewGuiController.updateHighestScore(highestScoreManager.getHighestScore());
+        viewGuiController.gameOver();
+    }
 
 
     @Override
     public DownData onDownEvent(MoveEvent event) {
-        boolean canMove = board.moveBrickDown();
-        ClearRow clearRow = null;
-        if (!canMove) {
-            
-            if (board.getLockDelayStart()<0){
-                board.setLockDelayStart(System.currentTimeMillis());
-                return new DownData(null,board.getViewData());
-            }
+        DownData data= gameBoard.moveDown();
 
-            if (System.currentTimeMillis()- board.getLockDelayStart()<board.getMaxLockDelay()){
-                return new DownData(null,board.getViewData());
-            }
-
-            board.setLockDelayStart(-1);
-            board.mergeBrickToBackground();
-            clearRow = board.clearRows();
-            if (clearRow.getLinesRemoved() > 0) {
-                board.getScore().add(clearRow.getScoreBonus());
-            }
-            if (board.createNewBrick()) {
-                viewGuiController.gameOver();
-            }
-
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
-        } else {
-
-            board.setLockDelayStart(-1);
-            if (event.getEventSource() == EventSource.USER) {
-                board.getScore().add(1);
-                checkHighestScoreTime();
-            }
+        if(event.getEventSource()== EventSource.USER){
+            gameBoard.getScore().add(1);
+            highestScoreManager.checkHighestScore(gameBoard.getScore().scoreProperty().get());
+            viewGuiController.updateHighestScore(highestScoreManager.getHighestScore());
         }
-        return new DownData(clearRow, board.getViewData());
+
+        viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
+
+        if (data.isGameOver()){
+            viewGuiController.gameOver();
+        }
+        return data;
     }
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
-        board.moveBrickLeft();
-        return board.getViewData();
+        gameBoard.moveBrickLeft();
+        return gameBoard.getViewData();
     }
 
     @Override
     public ViewData onRightEvent(MoveEvent event) {
-        board.moveBrickRight();
-        return board.getViewData();
+        gameBoard.moveBrickRight();
+        return gameBoard.getViewData();
     }
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
-        return board.getViewData();
+        gameBoard.rotateLeftBrick();
+        return gameBoard.getViewData();
     }
-
 
     @Override
     public void createNewGame() {
-        board.newGame();
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        gameBoard.newGame();
+        viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
     }
 
     @Override
     public ViewData onHoldEvent(MoveEvent event) {
-        ViewData viewData = board.holdBrick();
+        ViewData viewData = gameBoard.holdBrick();
 
-        int[][] heldShape = board.getHeldBrickShape();
+        int[][] heldShape = gameBoard.getHeldBrickShape();
         viewGuiController.updateHeldBrick(heldShape);
         return viewData;
     }
 
     @Override
     public int[][] getHeldBrickShape() {
-        return board.getHeldBrickShape();}
+        return gameBoard.getHeldBrickShape();}
 
     @Override
     public Point getGhostBrickPosition () {
-            return board.getGhostBrickPosition();
+            return gameBoard.getGhostBrickPosition();
     }
 
 
     @Override
     public QuickDropData onQuickDropEvent(MoveEvent event){
-        int dropDistance=0;
+        QuickDropData data= gameBoard.quickDrop();
 
-        boolean canMove = true;
-        while (canMove) {
-                canMove = board.moveBrickDown();
-                if(canMove) dropDistance++;
-        }
-        board.mergeBrickToBackground();
-
-        board.getScore().add(dropDistance*2);
-        checkHighestScoreTime();
-        board.mergeBrickToBackground();
-
-        ClearRow clearRow = board.clearRows();
-
-        if (clearRow.getLinesRemoved() > 0) {
-            board.getScore().add(clearRow.getScoreBonus());
-            checkHighestScoreTime();
-        }
-
-        if (board.createNewBrick()) {
+        if(data.isGameOver()){
             viewGuiController.gameOver();
         }
 
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
-        return new QuickDropData(clearRow, board.getViewData());
-        }
+        viewGuiController.refreshGameBackground(gameBoard.getBoardMatrix());
+        viewGuiController.updateHighestScore(highestScoreManager.getHighestScore());
+
+        return data;
+    }
 
     }
 

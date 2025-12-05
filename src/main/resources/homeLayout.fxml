@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="460.0" prefWidth="736.0" stylesheets="@homepage.css" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comp2042.HomeController">
+    <VBox alignment="CENTER" layoutX="369.0" layoutY="270.0" prefHeight="42.0" prefWidth="137.0">
+        <Button fx:id="zenButton" mnemonicParsing="false" onAction="#ZenMode" prefHeight="39.0" prefWidth="137.0"/>
+    </VBox>
+    <VBox layoutX="369.0" layoutY="339.0">
+        <Button mnemonicParsing="false" onAction="#timeMode" prefHeight="42.0" prefWidth="137.0"/>
+    </VBox>
+    <VBox layoutX="656.0" layoutY="12.0" prefHeight="68.0" prefWidth="77.0" AnchorPane.bottomAnchor="430.0"
+          AnchorPane.leftAnchor="770.0" AnchorPane.rightAnchor="0.0">
+        <Button mnemonicParsing="false" onAction="#HowtoPlayMenu" prefHeight="69.0" prefWidth="77.0"/>
+    </VBox>
+</AnchorPane>
