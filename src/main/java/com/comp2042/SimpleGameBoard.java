@@ -40,6 +40,7 @@ public class SimpleGameBoard implements GameBoard {
         return brickRotator.getCurrentIndex();
     }
 
+
     public boolean checkforCollision(Point currentOffset, int[][] shape){
         return  MatrixOperations.intersect(currentGameMatrix,brickRotator.getCurrentShape(),(int)currentOffset.getX(),
                 (int)currentOffset.getY());
