@@ -1,11 +1,11 @@
 package com.comp2042;
 
-import java.io.File;
+
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
-import java.util.regex.Pattern;
+
 
 /**
  * This class manages loading, storing and updating the highest score for the game.
